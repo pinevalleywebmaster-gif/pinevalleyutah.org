@@ -1,240 +1,196 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pine Valley Town Government</title>
+  <style>
+    :root {
+      --green: #2f5d3a;
+      --light-green: #e9f1ec;
+      --text: #1f2933;
+      --max-width: 1100px;
+    }
 
-<!-- favicon -->
+    * { box-sizing: border-box; }
 
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.6;
+    }
 
-<!--[if IE]><![endif]-->
+    header {
+      background: var(--green);
+      color: #fff;
+    }
 
-<title>Pine Valley Utah Official Home Page | Information about Pine Valley Utah</title>
-<link rel="alternate" type="application/rss+xml" title="Pine Valley Utah Official Home Page &raquo; Feed" href="https://pinevalleyutah.org/feed/" />
-<link rel="alternate" type="application/rss+xml" title="Pine Valley Utah Official Home Page &raquo; Comments Feed" href="https://pinevalleyutah.org/comments/feed/" />
-<link rel='stylesheet' id='dashicons-css'  href='stylesheets/dashicons' type='text/css' media='all' />
-<link rel='stylesheet' id='wunderground-css'  href='https://pinevalleyutah.org/wp-content/plugins/wunderground/assets/css/wunderground.css?ver=2.1.3' type='text/css' media='all' />
-<link rel='stylesheet' id='dazzling-bootstrap-css'  href='https://pinevalleyutah.org/wp-content/themes/ValleyGirl/inc/css/bootstrap.min.css?ver=4.1.41' type='text/css' media='all' />
-<link rel='stylesheet' id='dazzling-icons-css'  href='https://pinevalleyutah.org/wp-content/themes/ValleyGirl/inc/css/font-awesome.min.css?ver=4.1.41' type='text/css' media='all' />
-<link rel='stylesheet' id='flexslider-css-css'  href='https://pinevalleyutah.org/wp-content/themes/ValleyGirl/inc/css/flexslider.css?ver=4.1.41' type='text/css' media='all' />
-<link rel='stylesheet' id='dazzling-style-css'  href='https://pinevalleyutah.org/wp-content/themes/ValleyGirl/style.css?ver=4.1.41' type='text/css' media='all' />
-<link rel='stylesheet' id='jetpack_css-css'  href='https://pinevalleyutah.org/wp-content/plugins/jetpack/css/jetpack.css?ver=3.3.6' type='text/css' media='all' />
+    .header-inner {
+      max-width: var(--max-width);
+      margin: auto;
+      padding: 1.5rem 1rem;
+    }
 
-<!--
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-includes/js/jquery/jquery.js?ver=1.11.1'></script>
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-includes/js/jquery/ui/core.min.js?ver=1.11.2'></script>
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-includes/js/jquery/ui/widget.min.js?ver=1.11.2'></script>
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-includes/js/jquery/ui/position.min.js?ver=1.11.2'></script>
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-includes/js/jquery/ui/menu.min.js?ver=1.11.2'></script>
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-includes/js/jquery/ui/autocomplete.min.js?ver=1.11.2'></script>
-<script type='text/javascript'>
-/* <![CDATA[ */
-var WuWidget = {"apiKey":"3ffab52910ec1a0e","_wpnonce":"ca74740952","ajaxurl":"https:\/\/pinevalleyutah.org\/wp-admin\/admin-ajax.php","is_admin":"","subdomain":"www"};
-/* ]]> */
-</script>
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-content/plugins/wunderground/assets/js/widget.min.js?ver=2.1.3'></script>
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-content/themes/ValleyGirl/inc/js/bootstrap.min.js?ver=4.1.41'></script>
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-content/themes/ValleyGirl/inc/js/main.js?ver=4.1.41'></script>
-<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://pinevalleyutah.org/xmlrpc.php?rsd" />
-<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://pinevalleyutah.org/wp-includes/wlwmanifest.xml" /> 
-<meta name="generator" content="WordPress 4.1.41" />
-<link rel='canonical' href='https://pinevalleyutah.org/' />
-<link rel='shortlink' href="https://wp.me/P5PYb6-4j" />
--->
-	
-<style type='text/css'>img#wpstats{display:none}</style><style type="text/css">a, #infinite-handle span {color:#566cb5}a:hover {color: #7a88a0;}a:active {color: #65639e;}h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .entry-title {color: #6579a0;}.navbar-default .navbar-nav > li > a { color: #474747;}.navbar-default .navbar-nav .open .dropdown-menu > li > a { color: #6579a0;}#footer-area, .site-info {color: #6579a0;}.site-info a, #footer-area a {color: #2b54a0;}.entry-content {font-family: georgia; font-size:14px; font-weight: normal; color:#474747;}#homepage-text {
-    width: 45% !important;
-    float: right;
-}
-#frontpage-widget-wrapper {
-    width: 55% !important;
-    float: left;
-}
-footer #colophon.site-footer.site-info nav p {
-    float: left;
-    text-align: left;
-}
-blockquote {
-	font-size: 95%;
-}
-h3.widgettitle {
-	font-size: 18px;
-	border-bottom: 1px solid #eee;
-        margin-top: 0;
-	padding-top: 10px;     
-}
-.home-widget {
-	padding-top: 20px;
-}
-.entry-header {
-	border: none;
-}</style><style type="text/css" id="custom-background-css">
-body.custom-background { background-image: url('https://pinevalleyutah.org/wp-content/uploads/2015/03/cloudymtn1.png'); background-repeat: no-repeat; background-position: top center; background-attachment: scroll; }
-</style>
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
 
-<!-- Jetpack Open Graph Tags -->
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Pine Valley Utah Official Home Page" />
-<meta property="og:description" content="Information about Pine Valley Utah" />
-<meta property="og:url" content="https://pinevalleyutah.org/" />
-<meta property="og:site_name" content="Pine Valley Utah Official Home Page" />
-<meta property="og:image" content="https://s0.wp.com/i/blank.jpg" />
-<meta name="twitter:site" content="@jetpack" />
-<meta name="twitter:card" content="summary" />
-<!--[if lt IE 9]>
-<script src="https://pinevalleyutah.org/wp-content/themes/ValleyGirl/inc/js/html5shiv.min.js"></script>
-<script src="https://pinevalleyutah.org/wp-content/themes/ValleyGirl/inc/js/respond.min.js"></script>
-<![endif]-->
+    nav {
+      background: #24492e;
+    }
 
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      max-width: var(--max-width);
+      margin: auto;
+    }
+
+    nav a {
+      display: block;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    main {
+      max-width: var(--max-width);
+      margin: auto;
+      padding: 2rem 1rem;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    section h2 {
+      border-bottom: 3px solid var(--light-green);
+      padding-bottom: 0.25rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--light-green);
+      padding: 1.25rem;
+      border-radius: 6px;
+    }
+
+    footer {
+      background: #f3f4f6;
+      padding: 1.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    footer .inner {
+      max-width: var(--max-width);
+      margin: auto;
+    }
+
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
 </head>
+<body>
 
-<body class="home page page-id-267 page-template-default custom-background">
-<div id="page" class="hfeed site">
+<header>
+  <div class="header-inner">
+    <h1>Pine Valley Town Government</h1>
+    <p>Official Website of Pine Valley, Utah</p>
+  </div>
+</header>
 
-	<nav class="navbar navbar-default" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-			  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-			    <span class="sr-only">Toggle navigation</span>
-			    <span class="icon-bar"></span>
-			    <span class="icon-bar"></span>
-			    <span class="icon-bar"></span>
-			  </button>
+<nav>
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#government">Government</a></li>
+    <li><a href="#meetings">Meetings</a></li>
+    <li><a href="#documents">Public Documents</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
 
-				
-				
-					<div id="logo">
-						<span class="site-name"><a class="navbar-brand" href="https://pinevalleyutah.org/" title="Pine Valley Utah Official Home Page" rel="home">Pine Valley Utah Official Home Page</a></span>
-					</div><!-- end of #logo -->
+<main>
 
-				
-			</div>
-				<div class="collapse navbar-collapse navbar-ex1-collapse"><ul id="menu-topnav" class="nav navbar-nav"><li id="menu-item-263" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-263"><a title="Santa Clara River Water Data" href="https://waterdata.usgs.gov/nwis/uv?site_no=09409100"><span class="glyphicon Graphs showing data on the water flowing out of the River"></span>&nbsp;Santa Clara River Water Data</a></li>
-<li id="menu-item-264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-264"><a title="PVSSD" href="https://pinevalleyutah.org/pvssd-board-of-trustees/"><span class="glyphicon Pine Valley Special Service District page"></span>&nbsp;PVSSD</a></li>
-<li id="menu-item-265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-265"><a title="PVHAC" href="https://pinevalleyutah.org/pvhac/pvhac.html">PVHAC</a></li>
-<li id="menu-item-266" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-266"><a title="Area Map" href="https://pinevalleyutah.org/pine-valley-area-map/"><span class="glyphicon Pine Valley area map"></span>&nbsp;Area Map</a></li>
-</ul></div>		</div>
-	</nav><!-- .site-navigation -->
+  <section id="home">
+    <h2>Welcome</h2>
+    <p>Welcome to the official website of Pine Valley Town Government. This site provides access to public information, town meetings, documents, and resources for residents and visitors.</p>
+  </section>
 
-<div id="content" class="site-content container">
-	<div id="primary" class="content-area col-sm-12 col-md-12">
-		<main id="main" class="site-main" role="main">
-	<div class="aligncenter"><img src="https://pinevalleyutah.org/wp-content/uploads/2015/03/smtranssm.gif" width="1024" height="300"></div>
-	
-	<div id="frontpage-widget-wrapper">
-	<div class="home-widget-area row">
-				<div class="col-sm-4 col-md-4 home-widget" role="complementary">
-			<div id="text-11" class="widget widget_text">			<div class="textwidget"><a href="https://pinevalleyutah.org" title="Home"><h4 class="widget-title">Home</h4></a></div>
-		</div><div id="search-3" class="widget widget_search"><form method="get" class="form-search" action="https://pinevalleyutah.org/">
-	<div class="form-group">
-		<div class="input-group">
-	  		<span class="screen-reader-text">Search for:</span>
-	    	<input type="text" class="form-control search-query" placeholder="Search..." value="" name="s">
-	    	<span class="input-group-btn">
-	      		<button type="submit" class="btn btn-default" name="submit" id="searchsubmit" value="Search"><span class="glyphicon glyphicon-search"></span></button>
-	    	</span>
-	    </div>
-	</div>
-</form></div><div id="rss_links-3" class="widget widget_rss_links"><p><a href="https://pinevalleyutah.org/feed/" title="Subscribe to Posts"><img src="https://pinevalleyutah.org/wp-content/plugins/jetpack/images/rss/orange-medium.png" alt="RSS Feed" /></a>&nbsp;<a href="https://pinevalleyutah.org/feed/" title="Subscribe to Posts">RSS - Posts</a></p>
-</div><div id="text-8" class="widget widget_text">			<div class="textwidget"><h4 class="widget-title">Contact Us:</h4>
-<div class="widget widget_pages">
-<ul><li class="page_item"><a href="/cdn-cgi/l/email-protection#81ecf1f4f5efe0ecc1e8efe7eef6e4f2f5afe2eeec" title="Opens a new email form in your mail client">E-Mail Us</a></li></ul>
-</div></div>
-		</div>		</div><!-- .widget-area .first -->
-		
-				<div class="col-sm-4 col-md-6 home-widget" role="complementary">
-			<div id="text-9" class="widget widget_text">			<div class="textwidget"><h4 class="widget-title"><a href="/pvhac/pvhac.html" title="Pine Valley Historical Advisory Committee">PVHAC</a></h4>
-<div class="widget widget_pages">
-<ul><li class="page_item"><a href="/pvhac/pvgenplan.pdf" title="General Plan for Pine Valley, mandated by and submitted to Washington County">Pine Valley General Plan</a></li>
+  <section id="government">
+    <h2>Town Government</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Mayor</h3>
+        <p>Name<br />Term information</p>
+      </div>
+      <div class="card">
+        <h3>Town Council</h3>
+        <p>Member names<br />Meeting schedule</p>
+      </div>
+      <div class="card">
+        <h3>Clerk & Staff</h3>
+        <p>Contact and responsibilities</p>
+      </div>
+    </div>
+  </section>
 
-<li class="page_item"><a href="/pvhac/surveyfinal.pdf" title="Pine Valley Community Survey with graphs and data"> PV Community Survey</a></li></ul>
-</div></div>
-		</div>		</div><!-- .widget-area .second -->
-		
-				<div class="col-sm-4 col-md-6 home-widget" role="complementary">
-			<div id="text-13" class="widget widget_text"><h3 class="widgettitle">Pine Valley Special Services District (PVSSD)</h3>			<div class="textwidget"><ul><li class="page_item"><a href="https://pinevalleyutah.org/pvssd-board-of-trustees/" title="PVSSD">PVSSD Main Page</a></li></ul>
+  <section id="meetings">
+    <h2>Meetings & Notices</h2>
+    <p>Regular Town Council meetings are held on the ___ of each month at ___. Public notices and agendas will be posted here.</p>
+  </section>
 
-<ul><li class="page_item"><a href="https://pinevalleyutah.org/pvssd-board-of-trustees/public-notice-111225-pvlad/" title="PUBLIC NOTICE – 111225 PVLAD">PUBLIC NOTICE – 111225 PVLAD</a></li></ul>
+  <section id="documents">
+    <h2>Public Documents</h2>
+    <p>All public records, agendas, minutes, ordinances, and policies are available in the document repository below.</p>
 
-<ul><li class="page_item"><a href="https://pinevalleyutah.org/pvssd-board-of-trustees/public-notice-111225-pvssd/" title="PUBLIC NOTICE – 111225 PVSSD">PUBLIC NOTICE – 111225 PVSSD</a></li></ul>
+    <!-- Replace YOUR_GOOGLE_DRIVE_FOLDER_ID with your public folder ID -->
+    <iframe src="https://drive.google.com/embeddedfolderview?id=YOUR_GOOGLE_DRIVE_FOLDER_ID#list"></iframe>
+  </section>
 
-<ul><li class="page_item"><a href="https://pinevalleyutah.org/pvssd-board-of-trustees/final-overlay-ordinance-july-2022/" title="Final Overlay Ordinance">Final Overlay Ordinance July 2022</a></li></ul>
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p><strong>Address:</strong> Pine Valley, UT</p>
+    <p><strong>Email:</strong> town@pinevalley.gov</p>
+    <p><strong>Phone:</strong> (___) ___‑____</p>
+  </section>
 
-<ul><li class="page_item"><a href="https://pinevalleyutah.org/pvssd-board-of-trustees/pvlad-assessment-fee-public-notice" title="PVLAD Assessment Fee - Public Notice">PVLAD Assessment Fee - Public Notice</a></li></ul>
+</main>
 
-<ul><li class="page_item"><a href="https://pinevalleyutah.org/pvssd-board-of-trustees/pvssd-assessment-increase-notice/" title="PVSSD Assessment Increase Notice">PVSSD Assessment Increase Notice</a></li></ul>
-</div>
-		</div><div id="text-17" class="widget widget_text"><h3 class="widgettitle">PVSSD Board of Trustees Meetings Schedule</h3>			<div class="textwidget"><ul><li class="page_item"><a href="https://pinevalleyutah.org/pvssd-board-of-trustees/meetings-schedule/" title="Meetings Schedule">PVSSD Board of Trustees Meetings Schedule</a></li></ul></div>
-		</div><div id="text-16" class="widget widget_text"><h3 class="widgettitle">PVSSD Notice of Public Meeting (Agendas)</h3>			<div class="textwidget"><ul><li class="page_item"><a href="notice-of-pvssd-public-meetings-agendas/"title="PVSSD Notice of Public Meeting (Agendas)">PVSSD Notice of Public Meeting (Agendas)</a></li></ul></div>
-		</div><div id="text-12" class="widget widget_text"><h3 class="widgettitle">Go to Minutes Archives</h3>			<div class="textwidget"><ul><li class="page_item"><a href="https://pinevalleyutah.org/pvssd-board-of-trustees/pvssd-minutes-archive/" title =" Archives of PVSSD minutes by year"> Minutes of PVSSD by Year</a></li></ul></div>
-		</div>		</div><!-- .widget-area .third -->
-			</div>
-</div>
-			
-				<article id="post-267" class="post-267 page type-page status-publish hentry">
-					<div class="entry-content">
-						<div id="homepage-text">
-<h2>Welcome!</h2>
-<p>New year, new look, new functionality!  Please note that the site <em>should</em> be much more usable in most mobile devices now, as well as on desktops and laptops.</p>
-<p>I would like to thank <a href="http://www.angieadams.com/" title="Angie Adams Realtor" target="_blank">Angie Adams</a> for permission to use her photo of<a href="http://www.panoramio.com/user/5484896" title="Pine Valley Mountain from St George"> Pine Valley Mountain</a> as the header graphic for the site.</p>
-<p>If you have comments or suggestions, or if you find something with the new functionality that’s not working quite right, please let us know using the contact link in the left sidebar</p>
-</div>
-											</div><!-- .entry-content -->
-									</article><!-- #post-## -->
+<footer>
+  <div class="inner">
+    <p>&copy; <span id="year"></span> Pine Valley Town Government. All rights reserved.</p>
+  </div>
+</footer>
 
-				
-				
-			
-		</main><!-- #main -->
-	</div><!-- #primary -->
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 
-
-	</div><!-- #content -->
-
-	<div id="footer-area">
-		<div class="container footer-inner">
-			
-			</div>
-		
-		<footer id="colophon" class="site-footer" role="contentinfo">
-			<div class="site-info container">
-								<nav role="navigation" class="col-md-6">
-							<!-- </nav> -->
-					<p>Site development and maintenance:&nbsp;ByteHaven WebWorks</a><br >Web Hosting: The ByteHaven<br >Weather by <a href="http://www.katzwebservices.com/">WP Wunderground</a><br >
-Theme by <a href="https://colorlib.com/wp/themes/dazzling">Colorlib</a></p>
-
-<p><img src="/cgi-sys/Count.cgi?df=pinevall-pinevall.dat|display=Counter|reload=F|ft=0|md=5|frgb=100;139;216|dd=7|trgb=255;150;0|srgb=255;255;255|prgb=0;0;0" alt="Counter" /></p></nav>
-				<div class="copyright col-md-6">
-										
-
-<p>All trademarks and copyrights held by their respective owners.<br /> All materials on these pages not otherwise credited either <br />public domain or &copy; 2000 - 2025, PVSSD Board of Trustees</p>
-
-<p><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript">
-document.write("Last updated " +document.lastModified+"");
-</script></p>
-				</div>
-			</div><!-- .site-info -->
-			<div class="scroll-to-top"><i class="fa fa-angle-up"></i></div><!-- .scroll-to-top -->
-		</footer><!-- #colophon -->
-	</div>
-</div><!-- #page -->
-
-	<div style="display:none">
-	</div>
-<script type='text/javascript' src='https://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=202551'></script>
-<script type='text/javascript' src='https://pinevalleyutah.org/wp-content/themes/ValleyGirl/inc/js/flexslider.min.js?ver=2.2.2'></script>
-
-	<script src="https://stats.wp.com/e-202551.js" type="text/javascript"></script>
-	<script type="text/javascript">
-	st_go({v:'ext',j:'1:3.3.6',blog:'86267736',post:'267',tz:'-7'});
-	var load_cmc = function(){linktracker_init(86267736,267,2);};
-	if ( typeof addLoadEvent != 'undefined' ) addLoadEvent(load_cmc);
-	else load_cmc();
-	</script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4bf9b9b1658243958334e795603fbf57","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
-
 </html>
-
