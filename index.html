@@ -9,48 +9,64 @@
 <body>
 
 <header>
-  <div class="header-inner">
-    <h1><a href="index.html">Pine Valley Utah Official Home Page</a></h1>
-  </div>
+
+  <div id="name-and-nav">
+
+    <div id="page-name">
+      <h1><a href="index.html">Pine Valley Utah Official Home Page</a></h1>
+    </div>
+
+
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="https://waterdata.usgs.gov/nwis/uv?site_no=09409100">Santa Clara River Water Data</a></li>
+        <li><a href="pvssd-board-of-trustees.html">PVSSD</a></li>
+        <li><a href="pvhac.html">PVHAC</a></li>
+        <li><a href="pine-valley-area-map.html">Area Map</a></li>
+        <li><a href="public-documents.html">Public Documents</a></li>
+      </ul>
+    </nav>
+
+
+    </div>
+    
+    <img id="header-graphic" src="assets/pine-valley-snowy-mountain.png" width="100%" height="auto">
+
 </header>
-
-<nav>
-  <ul>
-    <li><a href="https://waterdata.usgs.gov/nwis/uv?site_no=09409100">Santa Clara River Water Data</a></li>
-    <li><a href="pvssd-board-of-trustees.html">PVSSD</a></li>
-    <li><a href="pvhac.html">PVHAC</a></li>
-    <li><a href="pine-valley-area-map.html">Area Map</a></li>
-  </ul>
-</nav>
-
-<img id="header-graphic" src="assets/pine-valley-snowy-mountain.png" width="1024" height="300" scale="0">
-
 
 <main>
 
-  <section id="home">
-    <h2>Welcome!</h2>
-    <p>New year, new look, new functionality! Please note that the site should be much more usable in most mobile devices now, as well as on desktops and laptops.</p>
-    <p>I would like to thank <a href="www.angieadams.com" title="Angie Adams Realtor">Angie Adams</a> for permission to use her photo of Pine Valley Mountain as the header graphic for the site.</p>
-    <p>If you have comments or suggestions, or if you find something with the new functionality that’s not working quite right, please let us know at pine.valley.webmaster@gmail.com.</p>
-  </section>
+  <div class="section-container">
+    <section id="home">
+      <h2>Welcome!</h2>
+      <p>New year, new look, new functionality! Please note that the site should be much more usable in most mobile devices now, as well as on desktops and laptops.</p>
+      <p>We would like to thank <a href="www.angieadams.com" title="Angie Adams Realtor">Angie Adams</a> for permission to use her photo of Pine Valley Mountain as the header graphic for the site.</p>
+      <p>If you have comments or suggestions, or if you find something with the new functionality that’s not working quite right, please let us know at <a href="mailto:pine.valley.webmaster@gmail.com">pine.valley.webmaster@gmail.com</a>.</p>
+    </section>
+  </div>
 
-  <section id="meetings">
-    <h2>Meetings Schedule</h2>
-    <p>PINE VALLEY SPECIAL SERVICE DISTRICT BOARD OF TRUSTEES MEETINGS</p>
-    <p>Meetings held first Wednesday of each month at the Pine Valley Fire Station, at 6:00 pm.</p>
-    <p>PVSSD meetings are open to the public. Please feel free to sit in on any meeting, giving your own thoughts on the subjects under discussion. Our goal is to keep Pine Valley a truly wonderful place to live. If you have concerns you’d like placed formally on the agenda, please follow this link to the PVSSD page for contact information.</p>
-    <p>PINE VALLEY HERITAGE CENTER</p>
-    <p>Heritage Center opens Memorial Day weekend and will remain open until Labor Day. Hours of operation are Monday through Saturday 10:00 to 6:00.</p>
-  </section>
+  <div class="section-container">
+    <section id="meetings">
+      <h2>Meetings Schedule</h2>
+      <p>PINE VALLEY SPECIAL SERVICE DISTRICT BOARD OF TRUSTEES MEETINGS</p>
+      <p>Meetings held first Wednesday of each month at the Pine Valley Fire Station, at 6:00 pm.</p>
+      <p>PVSSD meetings are open to the public. Please feel free to sit in on any meeting, giving your own thoughts on the subjects under discussion. Our goal is to keep Pine Valley a truly wonderful place to live. If you have concerns you’d like placed formally on the agenda, please follow this link to the PVSSD page for contact information.</p>
+      <p>PINE VALLEY HERITAGE CENTER</p>
+      <p>Heritage Center opens Memorial Day weekend and will remain open until Labor Day. Hours of operation are Monday through Saturday 10:00 to 6:00.</p>
+    </section>
+  </div>
 
-  <section id="documents">
-    <h2>Public Documents</h2>
-    <p>All public records, agendas, minutes, ordinances, and policies are available in the document repository below.</p>
+  <div class="section-container">
+    <section id="documents">
+      <h2>Public Documents</h2>
+      <p>All public records, agendas, minutes, ordinances, and policies are available in the document repository below.</p>
 
-    <!-- Replace YOUR_GOOGLE_DRIVE_FOLDER_ID with your public folder ID -->
-    <iframe src="https://drive.google.com/embeddedfolderview?id=1epNLdh2S4_6H_5V31Kw_id8MMmR6qFMA#list"></iframe>
-  </section>
+      <!-- Replace YOUR_GOOGLE_DRIVE_FOLDER_ID with your public folder ID -->
+      <iframe src="https://drive.google.com/embeddedfolderview?id=13cYAubJBTUmxaBG4ED8RuQMQvNW9cBHF#list"></iframe>
+    </section>
+  </div>
 
 </main>
 
@@ -64,10 +80,6 @@
     </p>
   </div>
 </footer>
-
-<script>
-  document.getElementById('year').textContent = new Date().getFullYear();
-</script>
 
 </body>
 </html>
