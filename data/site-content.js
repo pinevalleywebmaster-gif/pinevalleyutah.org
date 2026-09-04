@@ -1,9 +1,11 @@
 export const navigation = [
   { label: "Home", href: "/" },
-  { label: "Santa Clara River Water Data", href: "https://waterdata.usgs.gov/nwis/uv?site_no=09409100" },
+  { label: "Community Events", href: "/community-events/" },
+  { label: "Community Watch", href: "/community-watch/" },
+  { label: "Fire Department", href: "/fire-department/" },
   { label: "PVSSD", href: "/pvssd/" },
-  { label: "PVHAC", href: "/pvhac/" },
-  { label: "Area Map", href: "/area-map/" },
+  { label: "PVLAD", href: "/pvlad/" },
+  { label: "Overlay Zone", href: "/overlay-zone/" },
   { label: "Public Documents", href: "/public-documents/" },
 ];
 
