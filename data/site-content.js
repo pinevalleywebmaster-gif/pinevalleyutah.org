@@ -48,8 +48,6 @@ export const districtGroups = [
   },
 ];
 
-export const publicDocumentRepository = "https://drive.google.com/embeddedfolderview?id=13cYAubJBTUmxaBG4ED8RuQMQvNW9cBHF#list";
-
 export const historicalDocuments = [
   { label: "Pine Valley Community Survey 2003", href: "/assets/surveyfinal.pdf" },
   { label: "Pine Valley Community General Plan", href: "/assets/pvgenplan.pdf" },

@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { readFile, stat } from "node:fs/promises";
+import { access, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { communityBuckets } from "../data/community-content.js";
 
 const testsDirectory = path.dirname(fileURLToPath(import.meta.url));
 const siteDirectory = path.dirname(testsDirectory);
@@ -13,6 +14,11 @@ const routes = new Map([
   ["/public-documents", "out/public-documents/index.html"],
   ["/pvhac", "out/pvhac/index.html"],
   ["/pvssd", "out/pvssd/index.html"],
+  ["/community-events", "out/community-events/index.html"],
+  ["/community-watch", "out/community-watch/index.html"],
+  ["/fire-department", "out/fire-department/index.html"],
+  ["/pvlad", "out/pvlad/index.html"],
+  ["/overlay-zone", "out/overlay-zone/index.html"],
 ]);
 
 async function page(route) {
@@ -44,7 +50,18 @@ test("all public destinations remain represented", () => {
     "/public-documents",
     "/pvhac",
     "/pvssd",
+    "/community-events",
+    "/community-watch",
+    "/fire-department",
+    "/pvlad",
+    "/overlay-zone",
   ]);
+});
+
+test("every community bucket has a concrete route file", async () => {
+  for (const { slug } of communityBuckets) {
+    await assert.doesNotReject(access(path.join(siteDirectory, "app", slug, "page.js")), `Missing static route for /${slug}/`);
+  }
 });
 
 test("primary navigation keeps every important destination", async () => {
@@ -66,13 +83,18 @@ test("primary navigation keeps every important destination", async () => {
 test("home page preserves essential community information", async () => {
   const { html, text } = await page("/");
 
-  assert.match(text, /first Wednesday of each month/i);
-  assert.match(text, /Pine Valley Fire Station/i);
-  assert.match(text, /6:00 pm/i);
-  assert.match(text, /meetings are open to the public/i);
-  assert.match(text, /Memorial Day weekend/i);
-  assert.match(text, /Labor Day/i);
-  assert.match(text, /Monday through Saturday 10:00 to 6:00/i);
+  assert.match(text, /Community Activities/i);
+  assert.match(text, /numerous community activities planned throughout the year/i);
+  assert.match(text, /Click here to learn more/i);
+  assert.match(html, /href="\/community-events\/"/);
+  assert.match(text, /Mitzi Sullivan at 435-680-5988 or Korrie Ford at 702-577-8777/i);
+  assert.ok(links(html).includes("tel:+14356805988"));
+  assert.ok(links(html).includes("tel:+17025778777"));
+  assert.match(text, /Halloween Trunk or Treat/i);
+  assert.match(text, /Pine Valley Gardening Club/i);
+  assert.ok(links(html).includes("/assets/halloween-trunk-or-treat.pdf"));
+  assert.ok(links(html).includes("/assets/pine-valley-gardening-club-october.pdf"));
+  assert.doesNotMatch(text, /Heritage Center/i);
   assert.match(text, /Report Fraud, Waste, or Abuse/i);
   assert.match(html, /mailto:pine\.valley\.webmaster@gmail\.com/i);
   assert.ok(
@@ -81,16 +103,33 @@ test("home page preserves essential community information", async () => {
   );
 });
 
-test("public document repository remains accessible", async () => {
+test("public documents are organized by topic with PDF downloads", async () => {
   const { html, text } = await page("/public-documents");
 
-  assert.match(text, /public records, agendas, minutes, ordinances, and policies/i);
-  assert.ok(
-    links(html).some((link) =>
-      link.includes("drive.google.com/embeddedfolderview?id=13cYAubJBTUmxaBG4ED8RuQMQvNW9cBHF"),
-    ),
-    "The public Google Drive repository must remain embedded or linked",
-  );
+  assert.match(text, /browse public records by topic/i);
+  for (const destination of ["/pvssd/", "/pvlad/", "/overlay-zone/", "/pvhac/"]) {
+    assert.ok(links(html).includes(destination), `Missing topic documents page: ${destination}`);
+  }
+  assert.doesNotMatch(html, /drive\.google\.com\/embeddedfolderview/i);
+  for (const download of [
+    "/assets/halloween-trunk-or-treat.pdf",
+    "/assets/pine-valley-gardening-club-october.pdf",
+    "/assets/surveyfinal.pdf",
+    "/assets/pvgenplan.pdf",
+  ]) {
+    assert.ok(links(html).includes(download), `Missing downloadable PDF: ${download}`);
+  }
+  assert.match(html, /<details class="document-folder" open=/, "Folder sections should use expandable disclosure controls");
+  assert.match(html, /download=""/, "Each document link should trigger a file download");
+});
+
+test("topic sections expose their matching downloadable documents", async () => {
+  const events = await page("/community-events");
+  const heritage = await page("/pvhac");
+  assert.ok(links(events.html).includes("/assets/halloween-trunk-or-treat.pdf"));
+  assert.ok(links(events.html).includes("/assets/pine-valley-gardening-club-october.pdf"));
+  assert.ok(links(heritage.html).includes("/assets/surveyfinal.pdf"));
+  assert.ok(links(heritage.html).includes("/assets/pvgenplan.pdf"));
 });
 
 test("historical community documents are retained and non-empty", async () => {

@@ -31,7 +31,22 @@ figcaption { color: var(--muted); font-style: italic; }
 .contact-list, .document-list { padding: 0; list-style: none; }
 .contact-list li { display: grid; padding: 0.85rem 0; border-bottom: 1px solid var(--line); }
 .contact-list span { color: var(--muted); }
-.document-list a { display: block; margin-bottom: 0.75rem; padding: 1rem; background: var(--accent-light); border-radius: 0.4rem; font-weight: 700; }
+.document-list a { display: block; margin-bottom: 0.75rem; padding: 1rem; background: var(--accent-light); border-radius: 0.4rem; font-weight: 700; text-decoration: none; }
+.document-list a span { display: block; margin-top: 0.25rem; color: var(--muted); font: 0.875rem/1.5 Arial, Helvetica, sans-serif; font-weight: 400; }
+.download-list { display: grid; gap: 0.75rem; }
+.document-list { margin: 0; }
+.download-item { margin: 0; }
+.download-item-link { display: flex !important; align-items: center; justify-content: space-between; gap: 1rem; margin: 0 !important; border: 1px solid var(--line); transition: background-color 120ms ease, border-color 120ms ease; }
+.download-item-link:hover { background: white; border-color: var(--accent); }
+.download-item-copy { display: grid; gap: 0.2rem; min-width: 0; }
+.download-item-copy strong { color: var(--ink); overflow-wrap: anywhere; }
+.download-item-copy > span { color: var(--muted); font: 0.825rem/1.4 Arial, Helvetica, sans-serif; font-weight: 400; }
+.download-item-action { flex: none; color: var(--accent); font: 700 0.85rem/1.4 Arial, Helvetica, sans-serif; }
+.document-folder { border: 1px solid var(--line); border-radius: 0.4rem; background: white; }
+.document-folder summary { display: flex; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem; color: var(--accent); cursor: pointer; font: 700 1rem/1.4 Arial, Helvetica, sans-serif; list-style-position: inside; }
+.document-folder summary span { color: var(--muted); font: 0.8rem/1.4 Arial, Helvetica, sans-serif; font-weight: 400; }
+.document-folder > .document-list { padding: 0 0.75rem 0.25rem; }
+.document-list-empty { padding: 1rem; border: 1px dashed var(--accent-border); border-radius: 0.4rem; color: var(--muted); background: white; }
 footer { padding: 1.75rem 0; background: #e7eff6; color: var(--muted); font-size: 0.9rem; }
 footer p { margin: 0.35rem 0; }
 @media (max-width: 640px) { nav ul { display: grid; grid-template-columns: 1fr 1fr; } nav a { padding: 0.55rem; } }
@@ -83,6 +98,12 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 .service-card p { color: var(--muted); margin-bottom: 1.5rem; }
 .card-action { display: flex; justify-content: space-between; gap: 1rem; margin-top: auto; color: var(--accent); font: 700 0.9375rem/1.5 Arial, sans-serif; }
 .updates-panel { display: grid; grid-template-columns: 1fr 1.6fr; gap: clamp(1.5rem, 4vw, 3rem); padding: clamp(1.5rem, 4vw, 3rem); background: var(--accent-light); }
+.activities-panel { grid-template-columns: minmax(250px, 0.8fr) minmax(0, 1.4fr); align-items: start; }
+.activity-flyers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.activity-flyers article { min-width: 0; }
+.activity-flyers h3 { min-height: 2.7em; margin-top: 0; }
+.activity-flyers object { display: block; width: 100%; height: 360px; border: 1px solid var(--line); border-radius: 0.4rem; background: white; }
+.activity-flyers .button { margin-top: 0.75rem; }
 .update-list article + article { border-top: 1px solid var(--accent-border); margin-top: 1.5rem; padding-top: 1.5rem; }
 .update-list h3 { margin-top: 0; font-size: 1.35rem; }
 .resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; padding: 0; list-style: none; }
@@ -107,7 +128,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 @media (max-width: 640px) {
   .announcement > div, .section-heading { display: block; }
   .announcement a { display: inline-block; margin-top: 0.3rem; }
-  .service-grid, .updates-panel, .resource-grid, .help-panel, .footer-grid, .detail-layout { grid-template-columns: 1fr; }
+  .service-grid, .updates-panel, .resource-grid, .help-panel, .footer-grid, .detail-layout, .activity-flyers { grid-template-columns: 1fr; }
+  .activity-flyers object { height: 440px; }
   .page-menu { order: 2; }
   .welcome-panel { padding: 1.5rem; }
   .welcome-panel h1 { font-size: 2.2rem; }

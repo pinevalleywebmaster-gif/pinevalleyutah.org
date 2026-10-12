@@ -5,3 +5,6 @@ npm-debug.log*
 .wrangler/
 .dev.vars*
 !.dev.vars.example
+.env
+.env.*
+!.env.example

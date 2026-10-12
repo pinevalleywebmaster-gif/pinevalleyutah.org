@@ -18,11 +18,11 @@ export const communityBuckets = [
   { slug: "pvssd", title: "Pine Valley Special Service District", category: "PVSSD", description: "Board members, public meetings, district records, and fee inquiries." },
   { slug: "pvlad", title: "Pine Valley Local Administration District", category: "PVLAD", description: "District contacts, meeting information, and public documents.", sections: [
     { title: "About the district", text: "Find district representatives below. Contact the clerk with questions about district responsibilities or business.", contact: "rick.peetz@gmail.com" },
-    { title: "Meetings & public documents", text: "A separate PVLAD meeting schedule has not been posted here. Contact the clerk to confirm meeting details and consult the public document repository for available notices and records.", href: "/public-documents/", label: "Browse public documents" },
+    { title: "Meetings & public documents", text: "A separate PVLAD meeting schedule has not been posted here. Contact the clerk to confirm meeting details and browse available district records below.", contact: "rick.peetz@gmail.com" },
   ] },
   { slug: "overlay-zone", title: "Pine Valley Overlay Zone", category: "Planning & preservation", description: "Planning background, ordinance inquiries, and documents for PVLAD review.", sections: [
     { title: "Background & community planning", text: "Pine Valley’s community planning materials provide background on development and historical preservation in the valley.", href: "/pvhac/", label: "Read the community planning background" },
-    { title: "Overlay ordinance", text: "Consult the public document repository for available ordinances. Contact the district clerk to request the current Pine Valley Overlay Zone ordinance.", href: "/public-documents/", label: "Browse public documents", contact: "rick.peetz@gmail.com" },
+    { title: "Overlay ordinance", text: "Browse available planning materials below. Contact the district clerk to request the current Pine Valley Overlay Zone ordinance.", contact: "rick.peetz@gmail.com" },
     { title: "Documents for PVLAD review", text: "Contact the district clerk to confirm which documents are needed for your proposal and how to present them to PVLAD.", href: "/pvlad/", label: "View PVLAD contacts" },
   ] },
 ];
