@@ -25,8 +25,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Google API client
-        run: python -m pip install --upgrade google-api-python-client google-auth
+      - name: Install export dependencies
+        run: python -m pip install --upgrade google-api-python-client google-auth Pillow
+
+      - name: Install LibreOffice for Word documents
+        run: sudo apt-get update && sudo apt-get install --yes libreoffice-writer
 
       - name: Export Drive documents as PDFs
         env:

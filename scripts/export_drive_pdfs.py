@@ -8,14 +8,10 @@ import os
 import re
 import sys
 import shutil
+import subprocess
 import tempfile
 from urllib.parse import quote
 from pathlib import Path
-
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseDownload
-
 
 ROOT_FOLDER_ID = os.environ.get("GOOGLE_DRIVE_FOLDER_ID", "13cYAubJBTUmxaBG4ED8RuQMQvNW9cBHF")
 OUTPUT_ROOT = Path("public/documents")
@@ -31,6 +27,13 @@ GOOGLE_EXPORTS = {
     "application/vnd.google-apps.drawing": ("application/pdf", ".pdf"),
 }
 FOLDER_MIME = "application/vnd.google-apps.folder"
+WORD_MIMES = {
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+    "application/vnd.ms-word.document.macroEnabled.12",
+}
+IMAGE_MIMES = {"image/jpeg", "image/png", "image/gif", "image/tiff", "image/bmp", "image/webp"}
 
 
 def load_local_env():
@@ -58,6 +61,9 @@ def safe_name(name: str) -> str:
 
 
 def make_service():
+    from google.oauth2 import service_account
+    from googleapiclient.discovery import build
+
     credentials_file = os.environ.get("GOOGLE_SERVICE_ACCOUNT_FILE")
     raw_credentials = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON")
     if credentials_file:
@@ -96,6 +102,8 @@ def list_children(service, folder_id: str):
 
 
 def download_file(service, file_id: str, destination: Path, mime_type: str):
+    from googleapiclient.http import MediaIoBaseDownload
+
     if mime_type in GOOGLE_EXPORTS:
         export_mime, extension = GOOGLE_EXPORTS[mime_type]
         request = service.files().export_media(fileId=file_id, mimeType=export_mime)
@@ -112,6 +120,37 @@ def download_file(service, file_id: str, destination: Path, mime_type: str):
     buffer.close()
 
 
+def convert_office_file(source: Path, destination: Path):
+    """Convert a downloaded Office document with headless LibreOffice."""
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    profile = Path(tempfile.mkdtemp(prefix="libreoffice-profile-"))
+    try:
+        subprocess.run(
+            ["libreoffice", f"-env:UserInstallation={profile.as_uri()}", "--headless", "--convert-to", "pdf", "--outdir", str(destination.parent), str(source)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as error:
+        raise RuntimeError(f"Could not convert Office document {source.name} to PDF: {error}") from error
+    generated = destination.parent / f"{source.stem}.pdf"
+    if not generated.exists():
+        raise RuntimeError(f"LibreOffice did not create the expected PDF for {source.name}")
+    if generated != destination:
+        generated.replace(destination)
+
+
+def convert_image_file(source: Path, destination: Path):
+    """Convert an image into a one-page PDF using Pillow."""
+    from PIL import Image
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with Image.open(source) as image:
+        if image.mode not in ("RGB", "L"):
+            image = image.convert("RGB")
+        image.save(destination, "PDF", resolution=150.0)
+
+
 def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_paths: set[Path], manifest: list[dict]):
     for item in list_children(service, folder_id):
         name = safe_name(item["name"])
@@ -120,17 +159,29 @@ def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_pa
             continue
 
         mime_type = item["mimeType"]
-        if mime_type not in GOOGLE_EXPORTS and mime_type != "application/pdf":
+        supported_upload = mime_type in WORD_MIMES or mime_type in IMAGE_MIMES
+        if mime_type not in GOOGLE_EXPORTS and mime_type != "application/pdf" and not supported_upload:
             print(f"Skipping unsupported file: {item['name']} ({mime_type})")
             continue
 
-        suffix = ".pdf" if mime_type in GOOGLE_EXPORTS else Path(name).suffix
-        stem = Path(name).stem if suffix == ".pdf" else name
-        output = output_root / relative_dir / f"{safe_name(stem)}{suffix}"
+        output = output_root / relative_dir / f"{safe_name(Path(name).stem)}.pdf"
         if output in seen_paths:
-            raise RuntimeError(f"Two Drive files map to the same output path: {output}")
+            output = output.with_name(f"{output.stem} [{safe_name(item['id'])}].pdf")
+            if output in seen_paths:
+                raise RuntimeError(f"Drive file ID collision at output path: {output}")
         seen_paths.add(output)
-        download_file(service, item["id"], output, mime_type)
+        if mime_type in WORD_MIMES or mime_type in IMAGE_MIMES:
+            temporary_source = output.with_name(f"{output.stem}{Path(name).suffix}")
+            download_file(service, item["id"], temporary_source, mime_type)
+            try:
+                if mime_type in WORD_MIMES:
+                    convert_office_file(temporary_source, output)
+                else:
+                    convert_image_file(temporary_source, output)
+            finally:
+                temporary_source.unlink(missing_ok=True)
+        else:
+            download_file(service, item["id"], output, mime_type)
         print(f"Exported {item['name']} -> {output}")
         manifest.append({
             "title": Path(output.name).stem.replace("-", " ").replace("_", " "),
