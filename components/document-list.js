@@ -2,8 +2,8 @@ import { DocumentFolder } from "./document-folder";
 import { DocumentPreview } from "./document-preview";
 import { DownloadItem } from "./download-item";
 
-export function DocumentList({ documents, emptyMessage = "No documents have been published here yet.", preview = false }) {
-  if (!documents?.length) return <p className="document-list-empty">{emptyMessage}</p>;
+export function DocumentList({ documents, preview = false }) {
+  if (!documents?.length) return null;
 
   if (preview) {
     return <div className="document-preview-grid">
@@ -11,18 +11,30 @@ export function DocumentList({ documents, emptyMessage = "No documents have been
     </div>;
   }
 
-  const folders = new Map();
+  const root = { title: "", documents: [], folders: [] };
   for (const document of documents) {
-    const folder = document.folderTitle ?? document.relativePath?.split(/[\\/]/).slice(0, -1).filter(Boolean).join(" / ") ?? "";
-    if (!folders.has(folder)) folders.set(folder, []);
-    folders.get(folder).push(document);
+    const folderPath = document.folderTitle ?? document.relativePath?.split(/[\\/]/).slice(0, -1).filter(Boolean).join(" / ") ?? "";
+    const segments = folderPath.split("/").map((segment) => segment.trim()).filter(Boolean);
+    let current = root;
+    for (const title of segments) {
+      let child = current.folders.find((folder) => folder.title === title);
+      if (!child) {
+        child = { title, documents: [], folders: [] };
+        current.folders.push(child);
+      }
+      current = child;
+    }
+    current.documents.push(document);
   }
 
-  const folderGroups = [...folders.entries()].filter(([title]) => title);
-  const topLevel = folders.get("") ?? [];
+  const addCounts = (folder) => {
+    folder.documentCount = folder.documents.length + folder.folders.reduce((total, child) => total + addCounts(child), 0);
+    return folder.documentCount;
+  };
+  addCounts(root);
 
   return <div className="download-list">
-    {topLevel.length > 0 && <ul className="document-list">{topLevel.map((document) => <DownloadItem key={document.href} document={document} />)}</ul>}
-    {folderGroups.map(([title, folderDocuments]) => <DocumentFolder key={title} folder={{ title, documents: folderDocuments }} />)}
+    {root.documents.length > 0 && <ul className="document-list">{root.documents.map((document) => <DownloadItem key={document.href} document={document} />)}</ul>}
+    {root.folders.map((folder) => <DocumentFolder key={folder.title} folder={folder} />)}
   </div>;
 }

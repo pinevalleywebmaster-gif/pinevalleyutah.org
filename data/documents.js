@@ -11,7 +11,9 @@ export const topicFolders = {
 export const topicDocuments = {
   pvssd: [],
   pvlad: [],
-  "overlay-zone": [],
+  "overlay-zone": [
+    { title: "Final Overlay Ordinance July 2022", href: "/documents/Other%20Public%20Documents/Final%20Overlay%20Ordinance%20July%202022.pdf", folderTitle: "Overlay Zone", subtitle: "Pine Valley Overlay Zone ordinance · PDF" },
+  ],
   pvhac: [],
 };
 

@@ -45,7 +45,9 @@ figcaption { color: var(--muted); font-style: italic; }
 .document-folder { border: 1px solid var(--line); border-radius: 0.4rem; background: white; }
 .document-folder summary { display: flex; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem; color: var(--accent); cursor: pointer; font: 700 1rem/1.4 Arial, Helvetica, sans-serif; list-style-position: inside; }
 .document-folder summary span { color: var(--muted); font: 0.8rem/1.4 Arial, Helvetica, sans-serif; font-weight: 400; }
-.document-folder > .document-list { padding: 0 0.75rem 0.25rem; }
+.document-folder-content { display: grid; gap: 0.65rem; padding: 0 0.75rem 0.75rem; }
+.document-folder-content > .document-list { padding: 0; }
+.document-folder-content > .document-folder { margin-left: 0.35rem; }
 .document-list-empty { padding: 1rem; border: 1px dashed var(--accent-border); border-radius: 0.4rem; color: var(--muted); background: white; }
 .document-preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 1rem; }
 .document-preview-card { min-width: 0; padding: 0.9rem; border: 1px solid var(--line); border-radius: 0.5rem; background: white; }
