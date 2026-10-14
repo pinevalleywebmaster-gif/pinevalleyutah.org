@@ -13,8 +13,6 @@ export function DocumentPreview({ document }) {
         </svg>
       </a>
     </div>
-    <iframe className="document-preview-frame" src={`${document.href}#view=FitH`} title={`${document.title} PDF preview`} loading="lazy">
-      <a href={document.href} download>{label}</a>
-    </iframe>
+    <img className="document-preview-image" src={document.previewImage} alt={`${document.title} flyer`} loading="lazy" />
   </article>;
 }

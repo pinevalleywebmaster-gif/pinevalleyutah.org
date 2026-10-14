@@ -112,11 +112,12 @@ test("topic sections expose their matching downloadable documents", async () => 
   const heritage = await page("/pvhac");
   assert.ok(links(events.html).includes("/documents/Community%20Events/halloween-trunk-or-treat.pdf"));
   assert.ok(links(events.html).includes("/documents/Community%20Events/pine-valley-gardening-club-october.pdf"));
-  assert.match(events.html, /class="document-preview-frame"[^>]*src="\/documents\/Community%20Events\/halloween-trunk-or-treat\.pdf#view=FitH"/);
-  assert.match(events.html, /class="document-preview-frame"[^>]*src="\/documents\/Community%20Events\/pine-valley-gardening-club-october\.pdf#view=FitH"/);
+  assert.match(events.html, /class="document-preview-image"[^>]*src="\/images\/community-events\/halloween-trunk-or-treat\.png"[^>]*alt="Halloween Trunk or Treat flyer"/);
+  assert.match(events.html, /class="document-preview-image"[^>]*src="\/images\/community-events\/pine-valley-gardening-club-october\.png"[^>]*alt="Pine Valley Gardening Club · October flyer"/);
+  assert.doesNotMatch(events.html, /<iframe[^>]*(?:pdf|document-preview)/i, "Event flyers should render as page images without embedded PDF viewers");
   assert.match(events.html, /aria-label="Download Halloween Trunk or Treat PDF"/);
   assert.match(events.html, /aria-label="Download Pine Valley Gardening Club · October PDF"/);
-  assert.doesNotMatch(heritage.html, /document-preview-frame/, "PDF previews belong only on the Community Events page");
+  assert.doesNotMatch(heritage.html, /document-preview-image|document-preview-download/, "Flyer previews belong only on the Community Events page");
   assert.ok(links(heritage.html).includes("/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20Survey%202003.pdf"));
   assert.ok(links(heritage.html).includes("/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20General%20Plan.pdf"));
   assert.doesNotMatch(heritage.html, /Heritage Center/i);

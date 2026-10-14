@@ -16,7 +16,10 @@ export const topicDocuments = {
 };
 
 export const featuredDocuments = {
-  "community-events": [],
+  "community-events": [
+    { title: "Halloween Trunk or Treat", href: "/documents/Community%20Events/halloween-trunk-or-treat.pdf", previewImage: "/images/community-events/halloween-trunk-or-treat.png" },
+    { title: "Pine Valley Gardening Club · October", href: "/documents/Community%20Events/pine-valley-gardening-club-october.pdf", previewImage: "/images/community-events/pine-valley-gardening-club-october.png" },
+  ],
 };
 
 export const archivedDocuments = [
