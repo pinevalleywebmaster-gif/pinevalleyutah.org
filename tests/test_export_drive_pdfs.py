@@ -32,6 +32,35 @@ class FakeService:
 
 
 class ExportDrivePdfsTests(unittest.TestCase):
+    def test_locally_curated_community_events_are_preserved_until_drive_replaces_them(self):
+        with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as tmp:
+            root = Path(tmp)
+            local = root / "local" / "Community Events"
+            local.mkdir(parents=True)
+            (local / "halloween-trunk-or-treat.pdf").write_bytes(b"%PDF-local")
+            destination = root / "staged"
+            destination.mkdir()
+            manifest = []
+
+            with patch.object(exporter, "OUTPUT_ROOT", root / "local"):
+                exporter.preserve_local_community_events(destination, manifest)
+
+            preserved = destination / "Community Events" / "halloween-trunk-or-treat.pdf"
+            self.assertEqual(preserved.read_bytes(), b"%PDF-local")
+            self.assertEqual(manifest[0]["href"], "/documents/Community%20Events/halloween-trunk-or-treat.pdf")
+
+            # A later Drive folder can use a human-readable name with different punctuation.
+            future_drive = root / "future-drive"
+            drive_events = future_drive / "Community Events"
+            drive_events.mkdir(parents=True)
+            (drive_events / "Halloween Trunk or Treat.pdf").write_bytes(b"%PDF-drive")
+            second_manifest = []
+            with patch.object(exporter, "OUTPUT_ROOT", root / "local"):
+                exporter.preserve_local_community_events(future_drive, second_manifest)
+            self.assertFalse((drive_events / "halloween-trunk-or-treat.pdf").exists())
+            self.assertEqual((drive_events / "Halloween Trunk or Treat.pdf").read_bytes(), b"%PDF-drive")
+            self.assertEqual(second_manifest, [])
+
     def test_word_documents_and_images_are_converted_to_pdf(self):
         files = [
             {"id": "word-1", "name": "Annual Report.doc", "mimeType": "application/msword"},

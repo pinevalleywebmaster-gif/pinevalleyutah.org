@@ -10,7 +10,6 @@ const outputDirectory = path.join(siteDirectory, "out");
 const pages = [
   "index.html",
   "area-map/index.html",
-  "public-documents/index.html",
   "pvhac/index.html",
   "pvssd/index.html",
   "community-events/index.html",
@@ -60,13 +59,15 @@ test("every rendered document download across topic sections resolves to a real 
   const address = server.address();
   const origin = `http://127.0.0.1:${address.port}`;
   const pagesWithDownloads = new Map([
-    ["index.html", ["/assets/halloween-trunk-or-treat.pdf", "/assets/pine-valley-gardening-club-october.pdf"]],
-    ["community-events/index.html", ["/assets/halloween-trunk-or-treat.pdf", "/assets/pine-valley-gardening-club-october.pdf"]],
+    ["index.html", ["/documents/Community%20Events/halloween-trunk-or-treat.pdf", "/documents/Community%20Events/pine-valley-gardening-club-october.pdf"]],
+    ["community-events/index.html", ["/documents/Community%20Events/halloween-trunk-or-treat.pdf", "/documents/Community%20Events/pine-valley-gardening-club-october.pdf"]],
     ["pvssd/index.html", null],
     ["pvlad/index.html", null],
     ["overlay-zone/index.html", null],
-    ["public-documents/index.html", ["/assets/halloween-trunk-or-treat.pdf", "/assets/pine-valley-gardening-club-october.pdf", "/assets/surveyfinal.pdf", "/assets/pvgenplan.pdf"]],
-    ["pvhac/index.html", ["/assets/surveyfinal.pdf", "/assets/pvgenplan.pdf"]],
+    ["pvhac/index.html", [
+      "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20Survey%202003.pdf",
+      "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20General%20Plan.pdf",
+    ]],
   ]);
 
   async function publicDrivePdfs(directory, relativePath = "") {
@@ -87,13 +88,15 @@ test("every rendered document download across topic sections resolves to a real 
 
   const drivePdfPaths = await publicDrivePdfs(path.join(siteDirectory, "public", "documents"));
   for (const drivePath of drivePdfPaths) {
-    const topic = drivePath.split(/[\\/]/)[0].toLowerCase();
-    const targetPage = topic.includes("pvssd") ? "pvssd/index.html"
+    const topic = drivePath.toLowerCase();
+    const targetPage = topic.includes("community events") ? "community-events/index.html"
+      : topic.includes("pvssd") || topic.includes("2025 audit report") || topic.includes("screenshot_") ? "pvssd/index.html"
       : topic.includes("pvlad") ? "pvlad/index.html"
-      : topic.includes("overlay") ? "overlay-zone/index.html"
-      : topic.includes("heritage") ? "pvhac/index.html"
-      : "public-documents/index.html";
-    if (!pagesWithDownloads.has(targetPage)) pagesWithDownloads.set(targetPage, []);
+      : topic.includes("overlay") || topic.includes("pvoz") || topic.includes("str revisions") ? "overlay-zone/index.html"
+      : topic.includes("pvhac") || topic.includes("heritage") || topic.includes("historical advisory") ? "pvhac/index.html"
+      : null;
+    assert.ok(targetPage, `No topic section is assigned to document: ${drivePath}`);
+    if (!pagesWithDownloads.has(targetPage) || pagesWithDownloads.get(targetPage) === null) pagesWithDownloads.set(targetPage, []);
     pagesWithDownloads.get(targetPage).push(`/documents/${drivePath.split(/[\\/]/).map(encodeURIComponent).join("/")}`);
   }
 
@@ -136,7 +139,7 @@ test("Cloudflare deployment metadata is included in the export", async () => {
   assert.match(headers, /Cache-Control: public, max-age=31536000, immutable/);
 });
 
-for (const legacyPage of ["pine-valley-area-map.html", "public-documents.html", "pvhac.html", "pvssd-board-of-trustees.html"]) {
+for (const legacyPage of ["pine-valley-area-map.html", "pvhac.html", "pvssd-board-of-trustees.html"]) {
   test(`${legacyPage} remains available as a compatibility redirect`, async () => {
     const html = await readFile(path.join(outputDirectory, legacyPage), "utf8");
     assert.match(html, /http-equiv="refresh"/i);

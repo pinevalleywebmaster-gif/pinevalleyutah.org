@@ -16,7 +16,7 @@ export const communityBuckets = [
     { title: "Volunteer with the department", text: "For information about volunteering, contact Fire Chief Robert Hardy.", contact: "pinevalleyfirestation@gmail.com" },
   ] },
   { slug: "pvssd", title: "Pine Valley Special Service District", category: "PVSSD", description: "Board members, public meetings, district records, and fee inquiries." },
-  { slug: "pvlad", title: "Pine Valley Local Administration District", category: "PVLAD", description: "District contacts, meeting information, and public documents.", sections: [
+  { slug: "pvlad", title: "Pine Valley Local Administration District", category: "PVLAD", description: "District contacts, meeting information, and district records.", sections: [
     { title: "About the district", text: "Find district representatives below. Contact the clerk with questions about district responsibilities or business.", contact: "rick.peetz@gmail.com" },
     { title: "Meetings & public documents", text: "A separate PVLAD meeting schedule has not been posted here. Contact the clerk to confirm meeting details and browse available district records below.", contact: "rick.peetz@gmail.com" },
   ] },
@@ -28,7 +28,6 @@ export const communityBuckets = [
 ];
 
 export const resourceLinks = [
-  { label: "Public Documents", href: "/public-documents/" },
   { label: "Historical Advisory Committee", href: "/pvhac/" },
   { label: "Area Map & Recreation", href: "/area-map/" },
   { label: "Santa Clara River Water Data", href: "https://waterdata.usgs.gov/nwis/uv?site_no=09409100" },

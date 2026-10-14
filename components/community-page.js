@@ -13,9 +13,16 @@ export function CommunityPage({ bucket }) {
   const topicDocuments = mergeDocuments(groupDocumentsByDriveFolder([
     ...(topicFolders[bucket] ? getDocuments(topicFolders[bucket]) : []),
   ]), registeredTopicDocuments[bucket] ?? [], featuredDocuments[bucket] ?? []);
+  const documentHeading = bucket === "pvlad" ? "PVLAD documents"
+    : bucket === "overlay-zone" ? "Overlay Zone documents"
+    : bucket === "community-events" ? "Community activity downloads"
+    : "PVSSD documents";
+  const emptyMessage = bucket === "community-events"
+    ? "No community activity PDFs are available yet."
+    : `No ${bucket === "pvlad" ? "PVLAD" : bucket === "overlay-zone" ? "Overlay Zone" : "PVSSD"} PDFs are synced yet. Files will appear after the Drive sync has access to the source folder.`;
 
   return <>
     <div className="page-intro"><Link href="/#community">← Community services</Link><p className="eyebrow">{content.category}</p><h1>{content.title}</h1><p className="intro">{content.description}</p></div>
-    <div className="detail-layout"><aside className="page-menu" aria-label="Community services"><p className="eyebrow">Explore Pine Valley</p>{communityBuckets.map((item) => <Link key={item.slug} href={`/${item.slug}/`} aria-current={item.slug === bucket ? "page" : undefined}>{item.title}</Link>)}</aside><div>{content.sections.map((section) => <section className="detail-section" key={section.title}><h2>{section.title}</h2><p>{section.text}</p>{section.href && <p><Link href={section.href}>{section.label} →</Link></p>}{section.contact && <a href={`mailto:${section.contact}`}>{section.contact}</a>}</section>)}{(topicFolders[bucket] || registeredTopicDocuments[bucket] || featuredDocuments[bucket]) && <section className="detail-section"><h2>{bucket === "pvlad" ? "PVLAD documents" : bucket === "overlay-zone" ? "Overlay Zone documents" : "Community activity downloads"}</h2><p>Choose a document to download.</p><DocumentList documents={topicDocuments} emptyMessage={`No ${bucket === "pvlad" ? "PVLAD" : "Overlay Zone"} PDFs are synced yet. Files will appear after the Drive sync has access to the source folder.`} /></section>}{bucket === "pvlad" && <ContactGroup group={districtGroups[2]} />}</div></div>
+    <div className="detail-layout"><aside className="page-menu" aria-label="Community services"><p className="eyebrow">Explore Pine Valley</p>{communityBuckets.map((item) => <Link key={item.slug} href={`/${item.slug}/`} aria-current={item.slug === bucket ? "page" : undefined}>{item.title}</Link>)}</aside><div>{content.sections.map((section) => <section className="detail-section" key={section.title}><h2>{section.title}</h2><p>{section.text}</p>{section.href && <p><Link href={section.href}>{section.label} →</Link></p>}{section.contact && <a href={`mailto:${section.contact}`}>{section.contact}</a>}</section>)}{(topicFolders[bucket] || registeredTopicDocuments[bucket] || featuredDocuments[bucket]) && <section className="detail-section"><h2>{documentHeading}</h2><p>{bucket === "community-events" ? "Preview each flyer below, or download a copy." : "Choose a document to download."}</p><DocumentList documents={topicDocuments} emptyMessage={emptyMessage} preview={bucket === "community-events"} /></section>}{bucket === "pvlad" && <ContactGroup group={districtGroups[2]} />}</div></div>
   </>;
 }

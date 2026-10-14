@@ -1,9 +1,10 @@
 // Paths mirror the folders under public/documents. Add or move topic mappings as the Drive tree evolves.
 export const topicFolders = {
-  pvssd: ["PVSSD"],
+  pvssd: ["PVSSD", "2025 AUDIT REPORT", "Screenshot_"],
   pvlad: ["PVLAD"],
-  "overlay-zone": ["Overlay Zone"],
-  pvhac: ["Pine Valley Heritage Center", "Heritage"],
+  "overlay-zone": ["Overlay Zone", "Overlay Ordinance", "PVOZ", "STR revisions"],
+  pvhac: ["PVHAC", "Historical Advisory Committee", "Pine Valley Heritage Center", "Heritage"],
+  "community-events": ["Community Events"],
 };
 
 // Keep publicly approved static PDFs visible even before the first Drive sync runs.
@@ -15,13 +16,10 @@ export const topicDocuments = {
 };
 
 export const featuredDocuments = {
-  "community-events": [
-    { title: "Halloween Trunk or Treat", href: "/assets/halloween-trunk-or-treat.pdf", subtitle: "Community Activities · PDF" },
-    { title: "Pine Valley Gardening Club · October", href: "/assets/pine-valley-gardening-club-october.pdf", subtitle: "Community Activities · PDF" },
-  ],
+  "community-events": [],
 };
 
 export const archivedDocuments = [
-  { title: "Pine Valley Community Survey 2003", href: "/assets/surveyfinal.pdf", folderTitle: "Pine Valley Heritage Center", subtitle: "Historical community survey · PDF" },
-  { title: "Pine Valley Community General Plan", href: "/assets/pvgenplan.pdf", folderTitle: "Pine Valley Heritage Center", subtitle: "Community planning · PDF" },
+  { title: "Pine Valley Community Survey 2003", href: "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20Survey%202003.pdf", folderTitle: "Historical Advisory Committee records", subtitle: "Historical community survey · PDF" },
+  { title: "Pine Valley Community General Plan", href: "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20General%20Plan.pdf", folderTitle: "Historical Advisory Committee records", subtitle: "Community planning · PDF" },
 ];

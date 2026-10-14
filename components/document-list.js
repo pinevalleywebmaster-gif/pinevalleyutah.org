@@ -1,8 +1,15 @@
 import { DocumentFolder } from "./document-folder";
+import { DocumentPreview } from "./document-preview";
 import { DownloadItem } from "./download-item";
 
-export function DocumentList({ documents, emptyMessage = "No documents have been published here yet." }) {
+export function DocumentList({ documents, emptyMessage = "No documents have been published here yet.", preview = false }) {
   if (!documents?.length) return <p className="document-list-empty">{emptyMessage}</p>;
+
+  if (preview) {
+    return <div className="document-preview-grid">
+      {documents.map((document) => <DocumentPreview key={document.href} document={document} />)}
+    </div>;
+  }
 
   const folders = new Map();
   for (const document of documents) {

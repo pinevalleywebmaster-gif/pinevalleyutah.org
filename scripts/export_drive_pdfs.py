@@ -193,6 +193,35 @@ def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_pa
         })
 
 
+def preserve_local_community_events(output_root: Path, manifest: list[dict]):
+    """Keep locally curated event PDFs until matching files arrive from Drive."""
+    source_root = OUTPUT_ROOT / "Community Events"
+    if not source_root.is_dir():
+        return
+
+    for source in (path for path in source_root.rglob("*") if path.is_file() and path.suffix.lower() == ".pdf"):
+        relative_path = source.relative_to(OUTPUT_ROOT)
+        destination = output_root / relative_path
+        normalized_stem = re.sub(r"[^a-z0-9]", "", source.stem.casefold())
+        destination_names = {
+            re.sub(r"[^a-z0-9]", "", existing.stem.casefold())
+            for existing in destination.parent.glob("*.pdf")
+        } if destination.parent.is_dir() else set()
+        if destination.exists() or normalized_stem in destination_names:
+            # The Drive copy wins when it has the same name, even if punctuation differs.
+            continue
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+        manifest.append({
+            "title": destination.stem.replace("-", " ").replace("_", " "),
+            "relativePath": relative_path.as_posix(),
+            "href": "/documents/" + "/".join(quote(part) for part in relative_path.parts),
+            "sourceId": "locally-preserved",
+            "sourceName": source.name,
+            "sourcePath": relative_path.as_posix(),
+        })
+
+
 def main():
     service = make_service()
     OUTPUT_ROOT.parent.mkdir(parents=True, exist_ok=True)
@@ -202,6 +231,7 @@ def main():
         seen_paths: set[Path] = set()
         manifest: list[dict] = []
         walk(service, staged_root, ROOT_FOLDER_ID, Path(), seen_paths, manifest)
+        preserve_local_community_events(staged_root, manifest)
         for source, relative_output in PRESERVED_PDFS:
             if source.exists():
                 destination = staged_root / relative_output

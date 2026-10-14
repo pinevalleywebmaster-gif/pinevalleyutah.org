@@ -6,7 +6,6 @@ export const navigation = [
   { label: "PVSSD", href: "/pvssd/" },
   { label: "PVLAD", href: "/pvlad/" },
   { label: "Overlay Zone", href: "/overlay-zone/" },
-  { label: "Public Documents", href: "/public-documents/" },
 ];
 
 export const meetings = {
@@ -49,14 +48,13 @@ export const districtGroups = [
 ];
 
 export const historicalDocuments = [
-  { label: "Pine Valley Community Survey 2003", href: "/assets/surveyfinal.pdf" },
-  { label: "Pine Valley Community General Plan", href: "/assets/pvgenplan.pdf" },
+  { label: "Pine Valley Community Survey 2003", href: "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20Survey%202003.pdf" },
+  { label: "Pine Valley Community General Plan", href: "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20General%20Plan.pdf" },
 ];
 
 export const legacyRoutes = {
   "index.html": "/",
   "pine-valley-area-map.html": "/area-map/",
-  "public-documents.html": "/public-documents/",
   "pvhac.html": "/pvhac/",
   "pvssd-board-of-trustees.html": "/pvssd/",
 };

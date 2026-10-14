@@ -11,7 +11,6 @@ const siteDirectory = path.dirname(testsDirectory);
 const routes = new Map([
   ["/", "out/index.html"],
   ["/area-map", "out/area-map/index.html"],
-  ["/public-documents", "out/public-documents/index.html"],
   ["/pvhac", "out/pvhac/index.html"],
   ["/pvssd", "out/pvssd/index.html"],
   ["/community-events", "out/community-events/index.html"],
@@ -47,7 +46,6 @@ test("all public destinations remain represented", () => {
   assert.deepEqual([...routes.keys()], [
     "/",
     "/area-map",
-    "/public-documents",
     "/pvhac",
     "/pvssd",
     "/community-events",
@@ -73,7 +71,6 @@ test("primary navigation keeps every important destination", async () => {
     "/pvssd/",
     "/pvhac/",
     "/area-map/",
-    "/public-documents/",
     "https://waterdata.usgs.gov/nwis/uv?site_no=09409100",
   ]) {
     assert.ok(pageLinks.includes(destination), `Missing navigation destination: ${destination}`);
@@ -92,8 +89,8 @@ test("home page preserves essential community information", async () => {
   assert.ok(links(html).includes("tel:+17025778777"));
   assert.match(text, /Halloween Trunk or Treat/i);
   assert.match(text, /Pine Valley Gardening Club/i);
-  assert.ok(links(html).includes("/assets/halloween-trunk-or-treat.pdf"));
-  assert.ok(links(html).includes("/assets/pine-valley-gardening-club-october.pdf"));
+  assert.ok(links(html).includes("/documents/Community%20Events/halloween-trunk-or-treat.pdf"));
+  assert.ok(links(html).includes("/documents/Community%20Events/pine-valley-gardening-club-october.pdf"));
   assert.doesNotMatch(text, /Heritage Center/i);
   assert.match(text, /Report Fraud, Waste, or Abuse/i);
   assert.match(html, /mailto:pine\.valley\.webmaster@gmail\.com/i);
@@ -103,41 +100,37 @@ test("home page preserves essential community information", async () => {
   );
 });
 
-test("public documents are organized by topic with PDF downloads", async () => {
-  const { html, text } = await page("/public-documents");
-
-  assert.match(text, /browse public records by topic/i);
-  for (const destination of ["/pvssd/", "/pvlad/", "/overlay-zone/", "/pvhac/"]) {
-    assert.ok(links(html).includes(destination), `Missing topic documents page: ${destination}`);
-  }
-  assert.doesNotMatch(html, /drive\.google\.com\/embeddedfolderview/i);
-  for (const download of [
-    "/assets/halloween-trunk-or-treat.pdf",
-    "/assets/pine-valley-gardening-club-october.pdf",
-    "/assets/surveyfinal.pdf",
-    "/assets/pvgenplan.pdf",
-  ]) {
-    assert.ok(links(html).includes(download), `Missing downloadable PDF: ${download}`);
-  }
-  assert.match(html, /<details class="document-folder" open=/, "Folder sections should use expandable disclosure controls");
-  assert.match(html, /download=""/, "Each document link should trigger a file download");
+test("there is no central Public Documents page or navigation entry", async () => {
+  await assert.rejects(access(path.join(siteDirectory, "app", "public-documents", "page.js")));
+  const { html } = await page("/");
+  assert.doesNotMatch(html, /Public Documents/i);
+  assert.doesNotMatch(html, /href="\/public-documents\//i);
 });
 
 test("topic sections expose their matching downloadable documents", async () => {
   const events = await page("/community-events");
   const heritage = await page("/pvhac");
-  assert.ok(links(events.html).includes("/assets/halloween-trunk-or-treat.pdf"));
-  assert.ok(links(events.html).includes("/assets/pine-valley-gardening-club-october.pdf"));
-  assert.ok(links(heritage.html).includes("/assets/surveyfinal.pdf"));
-  assert.ok(links(heritage.html).includes("/assets/pvgenplan.pdf"));
+  assert.ok(links(events.html).includes("/documents/Community%20Events/halloween-trunk-or-treat.pdf"));
+  assert.ok(links(events.html).includes("/documents/Community%20Events/pine-valley-gardening-club-october.pdf"));
+  assert.match(events.html, /class="document-preview-frame"[^>]*src="\/documents\/Community%20Events\/halloween-trunk-or-treat\.pdf#view=FitH"/);
+  assert.match(events.html, /class="document-preview-frame"[^>]*src="\/documents\/Community%20Events\/pine-valley-gardening-club-october\.pdf#view=FitH"/);
+  assert.match(events.html, /aria-label="Download Halloween Trunk or Treat PDF"/);
+  assert.match(events.html, /aria-label="Download Pine Valley Gardening Club · October PDF"/);
+  assert.doesNotMatch(heritage.html, /document-preview-frame/, "PDF previews belong only on the Community Events page");
+  assert.ok(links(heritage.html).includes("/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20Survey%202003.pdf"));
+  assert.ok(links(heritage.html).includes("/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20General%20Plan.pdf"));
+  assert.doesNotMatch(heritage.html, /Heritage Center/i);
 });
 
 test("historical community documents are retained and non-empty", async () => {
   const { html } = await page("/pvhac");
 
-  for (const document of ["/assets/surveyfinal.pdf", "/assets/pvgenplan.pdf"]) {
+  for (const document of [
+    "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20Survey%202003.pdf",
+    "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20General%20Plan.pdf",
+  ]) {
     assert.ok(links(html).includes(document), `Historical page must link to ${document}`);
-    const details = await stat(path.join(siteDirectory, "out", document));
+    const details = await stat(path.join(siteDirectory, "out", "documents", ...decodeURIComponent(document).replace(/^\/documents\//, "").split("/")));
     assert.ok(details.size > 0, `${document} must not be empty`);
   }
 });
