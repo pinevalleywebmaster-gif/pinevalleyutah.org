@@ -3,21 +3,15 @@ import { communityBuckets } from "../data/community-content";
 import { ActivityFlyer } from "./activity-flyer";
 import { ForestResourceCard } from "./forest-resource-card";
 import { SectionHeading } from "./section-heading";
+import { getCommunityEvents } from "../lib/community-events";
 
-const activityFlyers = [
-  {
-    title: "Halloween Trunk or Treat",
-    href: "/documents/Community%20Events/halloween-trunk-or-treat.pdf",
-    previewLabel: "Open the Halloween Trunk or Treat flyer (PDF)",
-    downloadLabel: "Download flyer PDF",
-  },
-  {
-    title: "Pine Valley Gardening Club · October",
-    href: "/documents/Community%20Events/pine-valley-gardening-club-october.pdf",
-    previewLabel: "Open the October Gardening Club flyer (PDF)",
-    downloadLabel: "Download flyer PDF",
-  },
-];
+const activityFlyers = getCommunityEvents().flatMap((event) => event.flyers.map((flyer) => ({
+  title: `${event.title}: ${flyer.title}`,
+  href: flyer.href,
+  previewImage: flyer.previewImage,
+  previewLabel: `Open the ${flyer.title} PDF`,
+  downloadLabel: "Download flyer PDF",
+})));
 
 function CommunityServices() {
   return (

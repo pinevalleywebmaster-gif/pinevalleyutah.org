@@ -8,6 +8,8 @@ import { ContactGroup } from "./contact-group";
 import { DocumentList } from "./document-list";
 import { PageIntro } from "./page-intro";
 import { ResourceList } from "./resource-list";
+import { CommunityEventList } from "./community-event-list";
+import { getCommunityEvents } from "../lib/community-events";
 
 const documentHeadings = {
   "community-events": "Community activity downloads",
@@ -72,6 +74,19 @@ function CommunityDocuments({ bucket, documents }) {
   );
 }
 
+function CommunityEventsSection() {
+  const events = getCommunityEvents();
+  if (events.length === 0) return null;
+
+  return (
+    <section className="detail-section">
+      <h2>Community events</h2>
+      <p>Preview event flyers and browse photos from each event.</p>
+      <CommunityEventList events={events} />
+    </section>
+  );
+}
+
 function CommunityResources() {
   const resources = resourceLinks.map((resource) => ({
     ...resource,
@@ -110,7 +125,9 @@ export function CommunityPage({ bucket }) {
             <CommunitySection key={section.title} section={section} />
           ))}
           {bucket === "community-resources" && <CommunityResources />}
-          <CommunityDocuments bucket={bucket} documents={documents} />
+          {bucket === "community-events"
+            ? <CommunityEventsSection />
+            : <CommunityDocuments bucket={bucket} documents={documents} />}
           {bucket === "pvlad" && <ContactGroup group={districtGroups[2]} />}
         </div>
       </div>

@@ -152,10 +152,17 @@ def convert_image_file(source: Path, destination: Path):
 
 
 def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_paths: set[Path], manifest: list[dict]):
-    for item in list_children(service, folder_id):
+    children = list(list_children(service, folder_id))
+    if relative_dir.name.casefold() == "photos" or (relative_dir.name.casefold() == "flyers" and not children):
+        (output_root / relative_dir / ".gitkeep").parent.mkdir(parents=True, exist_ok=True)
+        (output_root / relative_dir / ".gitkeep").touch()
+
+    for item in children:
         name = safe_name(item["name"])
         if item["mimeType"] == FOLDER_MIME:
-            walk(service, output_root, item["id"], relative_dir / name, seen_paths, manifest)
+            child_dir = relative_dir / name
+            (output_root / child_dir).mkdir(parents=True, exist_ok=True)
+            walk(service, output_root, item["id"], child_dir, seen_paths, manifest)
             continue
 
         mime_type = item["mimeType"]
@@ -164,13 +171,18 @@ def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_pa
             print(f"Skipping unsupported file: {item['name']} ({mime_type})")
             continue
 
-        output = output_root / relative_dir / f"{safe_name(Path(name).stem)}.pdf"
+        in_event_photos = "community events" in {part.casefold() for part in relative_dir.parts} and "photos" in {part.casefold() for part in relative_dir.parts}
+        keep_photo_image = in_event_photos and mime_type in IMAGE_MIMES
+        output_name = safe_name(Path(name).name) if keep_photo_image else f"{safe_name(Path(name).stem)}.pdf"
+        output = output_root / relative_dir / output_name
         if output in seen_paths:
-            output = output.with_name(f"{output.stem} [{safe_name(item['id'])}].pdf")
+            output = output.with_name(f"{output.stem} [{safe_name(item['id'])}]{output.suffix}")
             if output in seen_paths:
                 raise RuntimeError(f"Drive file ID collision at output path: {output}")
         seen_paths.add(output)
-        if mime_type in WORD_MIMES or mime_type in IMAGE_MIMES:
+        if keep_photo_image:
+            download_file(service, item["id"], output, mime_type)
+        elif mime_type in WORD_MIMES or mime_type in IMAGE_MIMES:
             temporary_source = output.with_name(f"{output.stem}{Path(name).suffix}")
             download_file(service, item["id"], temporary_source, mime_type)
             try:
@@ -190,36 +202,26 @@ def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_pa
             "sourceId": item["id"],
             "sourceName": item["name"],
             "sourcePath": (relative_dir / name).as_posix(),
+            **({"type": "image"} if keep_photo_image else {}),
         })
 
 
-def preserve_local_community_events(output_root: Path, manifest: list[dict]):
-    """Keep locally curated event PDFs until matching files arrive from Drive."""
-    source_root = OUTPUT_ROOT / "Community Events"
-    if not source_root.is_dir():
+def generate_community_flyer_previews(output_root: Path):
+    """Render the first page of each event flyer PDF beside the original PDF."""
+    events_root = output_root / "Community Events"
+    if not events_root.is_dir():
         return
-
-    for source in (path for path in source_root.rglob("*") if path.is_file() and path.suffix.lower() == ".pdf"):
-        relative_path = source.relative_to(OUTPUT_ROOT)
-        destination = output_root / relative_path
-        normalized_stem = re.sub(r"[^a-z0-9]", "", source.stem.casefold())
-        destination_names = {
-            re.sub(r"[^a-z0-9]", "", existing.stem.casefold())
-            for existing in destination.parent.glob("*.pdf")
-        } if destination.parent.is_dir() else set()
-        if destination.exists() or normalized_stem in destination_names:
-            # The Drive copy wins when it has the same name, even if punctuation differs.
-            continue
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, destination)
-        manifest.append({
-            "title": destination.stem.replace("-", " ").replace("_", " "),
-            "relativePath": relative_path.as_posix(),
-            "href": "/documents/" + "/".join(quote(part) for part in relative_path.parts),
-            "sourceId": "locally-preserved",
-            "sourceName": source.name,
-            "sourcePath": relative_path.as_posix(),
-        })
+    for source in events_root.glob("*/Flyers/**/*.pdf"):
+        output_prefix = source.with_suffix("")
+        try:
+            subprocess.run(
+                ["pdftoppm", "-f", "1", "-singlefile", "-png", "-r", "120", str(source), str(output_prefix)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        except (OSError, subprocess.CalledProcessError) as error:
+            raise RuntimeError(f"Could not render flyer preview for {source.name}: {error}") from error
 
 
 def main():
@@ -231,7 +233,7 @@ def main():
         seen_paths: set[Path] = set()
         manifest: list[dict] = []
         walk(service, staged_root, ROOT_FOLDER_ID, Path(), seen_paths, manifest)
-        preserve_local_community_events(staged_root, manifest)
+        generate_community_flyer_previews(staged_root)
         for source, relative_output in PRESERVED_PDFS:
             if source.exists():
                 destination = staged_root / relative_output

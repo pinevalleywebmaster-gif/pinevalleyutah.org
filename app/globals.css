@@ -392,6 +392,92 @@ figcaption {
   height: 1.25rem;
 }
 
+.community-event-list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.community-event-card {
+  min-width: 0;
+  padding: clamp(0.85rem, 3vw, 1.4rem);
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  background: white;
+}
+
+.community-event-card > h3 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.2rem, 3vw, 1.55rem);
+}
+
+.community-event-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.community-event-footer .button:disabled {
+  color: var(--muted);
+  border-color: var(--line);
+  background: #f1f4f6;
+  cursor: not-allowed;
+}
+
+.community-event-empty {
+  padding: 1rem;
+  border: 1px dashed var(--line);
+  border-radius: 0.4rem;
+  color: var(--muted);
+}
+
+.community-event-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.community-event-photo {
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: white;
+}
+
+.community-event-photo img {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 0.25rem;
+}
+
+.community-event-photo figcaption {
+  padding-top: 0.75rem;
+  text-align: right;
+}
+
+.event-photo-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: var(--accent-light);
+  font: 700 0.9rem/1.2 Arial, sans-serif;
+  text-decoration: none;
+}
+
+.event-photo-download svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
 .document-preview-image {
   display: block;
   width: 100%;
@@ -437,6 +523,15 @@ footer p {
   .document-preview-download {
     width: 2.75rem;
     height: 2.75rem;
+  }
+
+  .community-event-footer .button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .community-event-photo-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -634,10 +729,11 @@ h2 {
   margin-top: 0;
 }
 
-.activity-flyers object {
+.activity-flyers img {
   display: block;
   width: 100%;
-  height: 360px;
+  max-height: 440px;
+  object-fit: contain;
   border: 1px solid var(--line);
   border-radius: 0.4rem;
   background: white;
@@ -805,9 +901,6 @@ h2 {
   }
   .service-grid, .updates-panel, .resource-grid, .help-panel, .footer-grid, .detail-layout, .activity-flyers {
     grid-template-columns: 1fr;
-  }
-  .activity-flyers object {
-    height: 440px;
   }
   .page-menu {
     order: 2;

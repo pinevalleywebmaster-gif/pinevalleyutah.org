@@ -15,12 +15,16 @@ SPEC.loader.exec_module(exporter)
 class FakeFiles:
     def __init__(self, files):
         self.items = files
+        self.parent_id = None
 
-    def list(self, **_kwargs):
+    def list(self, **kwargs):
+        query = kwargs.get("q", "")
+        self.parent_id = query.split("'", 2)[1] if "'" in query else None
         return self
 
     def execute(self):
-        return {"files": self.items}
+        items = self.items.get(self.parent_id, []) if isinstance(self.items, dict) else self.items
+        return {"files": items}
 
 
 class FakeService:
@@ -32,34 +36,59 @@ class FakeService:
 
 
 class ExportDrivePdfsTests(unittest.TestCase):
-    def test_locally_curated_community_events_are_preserved_until_drive_replaces_them(self):
+    def test_event_folders_keep_flyers_as_pdfs_and_photos_as_images(self):
+        drive = {
+            "root": [{"id": "events", "name": "Community Events", "mimeType": exporter.FOLDER_MIME}],
+            "events": [{"id": "halloween", "name": "Halloween Party 2026", "mimeType": exporter.FOLDER_MIME}],
+            "halloween": [
+                {"id": "flyers", "name": "Flyers", "mimeType": exporter.FOLDER_MIME},
+                {"id": "photos", "name": "Photos", "mimeType": exporter.FOLDER_MIME},
+            ],
+            "flyers": [{"id": "flyer", "name": "Halloween Flyer.pdf", "mimeType": "application/pdf"}],
+            "photos": [{"id": "photo", "name": "Decorations.JPG", "mimeType": "image/jpeg"}],
+        }
         with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as tmp:
             root = Path(tmp)
-            local = root / "local" / "Community Events"
-            local.mkdir(parents=True)
-            (local / "halloween-trunk-or-treat.pdf").write_bytes(b"%PDF-local")
             destination = root / "staged"
-            destination.mkdir()
             manifest = []
 
-            with patch.object(exporter, "OUTPUT_ROOT", root / "local"):
-                exporter.preserve_local_community_events(destination, manifest)
+            def fake_download(_service, file_id, output, _mime_type):
+                output.parent.mkdir(parents=True, exist_ok=True)
+                output.write_bytes(b"%PDF-flyer" if file_id == "flyer" else b"\xff\xd8\xff-photo")
 
-            preserved = destination / "Community Events" / "halloween-trunk-or-treat.pdf"
-            self.assertEqual(preserved.read_bytes(), b"%PDF-local")
-            self.assertEqual(manifest[0]["href"], "/documents/Community%20Events/halloween-trunk-or-treat.pdf")
+            with patch.object(exporter, "download_file", side_effect=fake_download) as download:
+                exporter.walk(FakeService(drive), destination, "root", Path(), set(), manifest)
+            flyer = destination / "Community Events" / "Halloween Party 2026" / "Flyers" / "Halloween Flyer.pdf"
+            photo = destination / "Community Events" / "Halloween Party 2026" / "Photos" / "Decorations.JPG"
+            self.assertTrue(flyer.is_file())
+            self.assertTrue(photo.is_file())
+            self.assertEqual(flyer.read_bytes(), b"%PDF-flyer")
+            self.assertEqual(photo.read_bytes(), b"\xff\xd8\xff-photo")
+            self.assertEqual([entry.get("type") for entry in manifest], [None, "image"])
+            self.assertEqual(download.call_args_list[1].args[2].suffix, ".JPG")
 
-            # A later Drive folder can use a human-readable name with different punctuation.
-            future_drive = root / "future-drive"
-            drive_events = future_drive / "Community Events"
-            drive_events.mkdir(parents=True)
-            (drive_events / "Halloween Trunk or Treat.pdf").write_bytes(b"%PDF-drive")
-            second_manifest = []
-            with patch.object(exporter, "OUTPUT_ROOT", root / "local"):
-                exporter.preserve_local_community_events(future_drive, second_manifest)
-            self.assertFalse((drive_events / "halloween-trunk-or-treat.pdf").exists())
-            self.assertEqual((drive_events / "Halloween Trunk or Treat.pdf").read_bytes(), b"%PDF-drive")
-            self.assertEqual(second_manifest, [])
+    def test_empty_event_photo_folders_are_preserved_in_sync_output(self):
+        drive = {
+            "event": [{"id": "photos", "name": "Photos", "mimeType": exporter.FOLDER_MIME}],
+            "photos": [],
+        }
+        with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as tmp:
+            root = Path(tmp)
+            exporter.walk(FakeService(drive), root, "event", Path("Community Events") / "Test Event", set(), [])
+            marker = root / "Community Events" / "Test Event" / "Photos" / ".gitkeep"
+            self.assertTrue(marker.is_file())
+
+    def test_flyer_previews_render_from_pdf_in_the_same_folder(self):
+        with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as tmp:
+            root = Path(tmp)
+            flyer = root / "Community Events" / "Test Event" / "Flyers" / "notice.pdf"
+            flyer.parent.mkdir(parents=True)
+            flyer.write_bytes(b"%PDF-test")
+
+            with patch.object(exporter.subprocess, "run") as run:
+                exporter.generate_community_flyer_previews(root)
+
+        self.assertEqual(run.call_args.args[0][-2:], [str(flyer), str(flyer.with_suffix(""))])
 
     def test_word_documents_and_images_are_converted_to_pdf(self):
         files = [

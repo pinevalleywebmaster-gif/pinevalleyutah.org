@@ -20,12 +20,14 @@ export function DocumentPreview({ document }) {
           <DownloadIcon />
         </a>
       </div>
-      <img
-        className="document-preview-image"
-        src={document.previewImage}
-        alt={`${document.title} flyer`}
-        loading="lazy"
-      />
+      {document.previewImage && (
+        <img
+          className="document-preview-image"
+          src={document.previewImage}
+          alt={`${document.title} flyer`}
+          loading="lazy"
+        />
+      )}
     </article>
   );
 }
