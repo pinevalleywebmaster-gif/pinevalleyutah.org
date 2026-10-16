@@ -13,13 +13,14 @@ export const communityBuckets = [
   { slug: "pvssd", title: "Pine Valley Special Service District", category: "PVSSD", description: "Board members, public meetings, district records, and fee inquiries." },
   { slug: "pvlad", title: "Pine Valley Local Administration District", category: "PVLAD", description: "District contacts, meeting information, and district records.", sections: [
     { title: "About the district", text: "Find district representatives below. Contact the clerk with questions about district responsibilities or business.", contact: "rick.peetz@gmail.com" },
-    { title: "Meetings & public documents", text: "Contact the district clerk for the meeting schedule, agendas, and minutes. Available district records are listed below." },
+    { title: "Meetings & public documents", text: "PVLAD meetings are held on the second Wednesday of each month at 6:00 pm. Contact the district clerk for agendas and minutes. Available district records are listed below." },
   ] },
   { slug: "overlay-zone", title: "Pine Valley Overlay Zone", category: "Planning & preservation", description: "Planning background, ordinance inquiries, and documents for PVLAD review.", sections: [
     { title: "Background & community planning", text: "Pine Valley’s community planning materials provide background on development and historical preservation in the valley.", href: "/pvhac/", label: "Read the community planning background" },
     { title: "Overlay ordinance", text: "Browse available planning materials below. Contact the district clerk to request the current Pine Valley Overlay Zone ordinance.", contact: "rick.peetz@gmail.com" },
     { title: "Documents for PVLAD review", text: "Contact the district clerk to confirm which documents are needed for your proposal and how to present them to PVLAD.", href: "/pvlad/", label: "View PVLAD contacts" },
   ] },
+  { slug: "community-resources", title: "Community Resources", category: "Useful links", description: "Helpful links for Pine Valley history, recreation, and local water data.", sections: [] },
 ];
 
 export const resourceLinks = [

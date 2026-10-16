@@ -9,7 +9,8 @@ export const navigation = [
 ];
 
 export const meetings = {
-  district: "Meetings are held the first Wednesday of each month at the Pine Valley Fire Station at 6:00 pm.",
+  pvlad: "PVLAD meetings are held on the second Wednesday of each month at 6:00 pm.",
+  district: "PVSSD meetings are held on the second Wednesday of each month at 7:00 pm at the Pine Valley Fire Station.",
   access: "PVSSD meetings are open to the public. Please feel free to attend and share your thoughts on the subjects under discussion.",
   heritage: "The Pine Valley Heritage Center opens Memorial Day weekend and remains open until Labor Day. Hours are Monday through Saturday 10:00 to 6:00.",
 };
