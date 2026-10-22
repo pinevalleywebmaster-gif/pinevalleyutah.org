@@ -12,7 +12,6 @@ export const meetings = {
   pvlad: "PVLAD meetings are held on the second Wednesday of each month at 6:00 pm.",
   district: "PVSSD meetings are held on the second Wednesday of each month at 7:00 pm, or immediately following the PVLAD meeting that begins at 6:00 pm. Meetings are held at the Pine Valley Fire Station, 680 East Main Street. The public is welcome in person or electronically.",
   access: "PVSSD meetings are open to the public. Please feel free to attend and share your thoughts on the subjects under discussion.",
-  heritage: "The Pine Valley Heritage Center opens Memorial Day weekend and remains open until Labor Day. Hours are Monday through Saturday 10:00 to 6:00.",
 };
 
 export const districtGroups = [
@@ -48,13 +47,7 @@ export const districtGroups = [
   },
 ];
 
-export const historicalDocuments = [
-  { label: "Pine Valley Community Survey 2003", href: "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20Survey%202003.pdf" },
-  { label: "Pine Valley Community General Plan", href: "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20General%20Plan.pdf" },
-];
-
 export const legacyRoutes = {
   "index.html": "/",
-  "pvhac.html": "/pvhac/",
   "pvssd-board-of-trustees.html": "/pvssd/",
 };

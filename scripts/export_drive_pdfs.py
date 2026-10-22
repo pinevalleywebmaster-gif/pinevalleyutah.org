@@ -15,10 +15,6 @@ from pathlib import Path
 
 ROOT_FOLDER_ID = os.environ.get("GOOGLE_DRIVE_FOLDER_ID", "13cYAubJBTUmxaBG4ED8RuQMQvNW9cBHF")
 OUTPUT_ROOT = Path("public/documents")
-PRESERVED_PDFS = [
-    (Path("public/assets/surveyfinal.pdf"), Path("Pine Valley Heritage Center") / "Pine Valley Community Survey 2003.pdf"),
-    (Path("public/assets/pvgenplan.pdf"), Path("Pine Valley Heritage Center") / "Pine Valley Community General Plan.pdf"),
-]
 SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
 GOOGLE_EXPORTS = {
     "application/vnd.google-apps.document": ("application/pdf", ".pdf"),
@@ -160,6 +156,8 @@ def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_pa
     for item in children:
         name = safe_name(item["name"])
         if item["mimeType"] == FOLDER_MIME:
+            if name.casefold() == "pine valley heritage center" or name.casefold().startswith("pvhac"):
+                continue
             child_dir = relative_dir / name
             (output_root / child_dir).mkdir(parents=True, exist_ok=True)
             walk(service, output_root, item["id"], child_dir, seen_paths, manifest)
@@ -234,20 +232,6 @@ def main():
         manifest: list[dict] = []
         walk(service, staged_root, ROOT_FOLDER_ID, Path(), seen_paths, manifest)
         generate_community_flyer_previews(staged_root)
-        for source, relative_output in PRESERVED_PDFS:
-            if source.exists():
-                destination = staged_root / relative_output
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(source, destination)
-                relative_path = destination.relative_to(staged_root).as_posix()
-                manifest.append({
-                    "title": destination.stem,
-                    "relativePath": relative_path,
-                    "href": "/documents/" + "/".join(quote(part) for part in Path(relative_path).parts),
-                    "sourceId": "site-asset",
-                    "sourceName": source.name,
-                    "sourcePath": relative_path,
-                })
         (staged_root / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
         (staged_root / "README.md").write_text(
             "PDF exports from the public Google Drive document repository. Folder structure mirrors Google Drive.\n",

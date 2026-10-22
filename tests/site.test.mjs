@@ -9,7 +9,6 @@ const siteDirectory = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
 const outputDirectory = path.join(siteDirectory, "out");
 const pages = [
   "index.html",
-  "pvhac/index.html",
   "pvssd/index.html",
   "community-events/index.html",
   "community-events/halloween-party-2026/photos/index.html",
@@ -71,10 +70,6 @@ test("every rendered document download across topic sections resolves to a real 
     ["pvssd/index.html", null],
     ["pvlad/index.html", null],
     ["overlay-zone/index.html", null],
-    ["pvhac/index.html", [
-      "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20Survey%202003.pdf",
-      "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20General%20Plan.pdf",
-    ]],
   ]);
 
   async function publicDrivePdfs(directory, relativePath = "") {
@@ -116,7 +111,6 @@ test("every rendered document download across topic sections resolves to a real 
       : topic.includes("pvssd") || topic.includes("2025 audit report") || topic.includes("screenshot_") ? "pvssd/index.html"
       : topic.includes("pvlad") ? "pvlad/index.html"
       : topic.includes("overlay") || topic.includes("pvoz") || topic.includes("str revisions") ? "overlay-zone/index.html"
-      : topic.includes("pvhac") || topic.includes("heritage") || topic.includes("historical advisory") ? "pvhac/index.html"
       : null;
     assert.ok(targetPage, `No topic section is assigned to document: ${drivePath}`);
     if (!pagesWithDownloads.has(targetPage) || pagesWithDownloads.get(targetPage) === null) pagesWithDownloads.set(targetPage, []);
@@ -176,13 +170,12 @@ test("Cloudflare deployment metadata is included in the export", async () => {
   const redirects = await readFile(path.join(outputDirectory, "_redirects"), "utf8");
   const headers = await readFile(path.join(outputDirectory, "_headers"), "utf8");
 
-  assert.match(redirects, /\/pvhac\.html \/pvhac\/ 301/);
   assert.match(redirects, /\/pvssd-board-of-trustees\.html \/pvssd\/ 301/);
   assert.match(headers, /X-Content-Type-Options: nosniff/);
   assert.match(headers, /Cache-Control: public, max-age=31536000, immutable/);
 });
 
-for (const legacyPage of ["pvhac.html", "pvssd-board-of-trustees.html"]) {
+for (const legacyPage of ["pvssd-board-of-trustees.html"]) {
   test(`${legacyPage} remains available as a compatibility redirect`, async () => {
     const html = await readFile(path.join(outputDirectory, legacyPage), "utf8");
     assert.match(html, /http-equiv="refresh"/i);

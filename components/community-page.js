@@ -95,6 +95,29 @@ function CommunityResources() {
     <section className="detail-section">
       <h2>Useful links</h2>
       <ResourceList resources={resources} className="resource-grid" />
+      <div className="recreation-promo">
+        <a
+          className="recreation-banner-link"
+          href="https://www.recreation.gov/camping/campgrounds/232244"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Open Pine Valley Campground on Recreation.gov"
+        >
+          <img
+            src="/assets/recreation-gov-banner.png"
+            alt="Recreation.gov"
+            loading="lazy"
+          />
+        </a>
+        <a
+          className="recreation-promo-text"
+          href="https://www.recreation.gov/camping/campgrounds/232244"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Pine Valley campground on Recreation.gov <span aria-hidden="true">↗</span>
+        </a>
+      </div>
     </section>
   );
 }

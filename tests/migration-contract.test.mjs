@@ -11,7 +11,6 @@ const siteDirectory = path.dirname(testsDirectory);
 
 const routes = new Map([
   ["/", "out/index.html"],
-  ["/pvhac", "out/pvhac/index.html"],
   ["/pvssd", "out/pvssd/index.html"],
   ["/community-events", "out/community-events/index.html"],
   ["/community-events/halloween-party-2026/photos", "out/community-events/halloween-party-2026/photos/index.html"],
@@ -47,7 +46,6 @@ function links(html) {
 test("all public destinations remain represented", () => {
   assert.deepEqual([...routes.keys()], [
     "/",
-    "/pvhac",
     "/pvssd",
     "/community-events",
     "/community-events/halloween-party-2026/photos",
@@ -72,7 +70,6 @@ test("primary navigation keeps every important destination", async () => {
   for (const destination of [
     "/",
     "/pvssd/",
-    "/pvhac/",
     "https://waterdata.usgs.gov/nwis/uv?site_no=09409100",
   ]) {
     assert.ok(pageLinks.includes(destination), `Missing navigation destination: ${destination}`);
@@ -111,7 +108,6 @@ test("there is no central Public Documents page or navigation entry", async () =
 
 test("topic sections expose their matching downloadable documents", async () => {
   const events = await page("/community-events");
-  const heritage = await page("/pvhac");
   assert.ok(links(events.html).includes("/documents/Community%20Events/Halloween%20Party%202026/Flyers/halloween-trunk-or-treat.pdf"));
   assert.ok(links(events.html).includes("/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/pine-valley-gardening-club-october.pdf"));
   assert.match(events.html, /class="document-preview-image"[^>]*src="\/documents\/Community%20Events\/Halloween%20Party%202026\/Flyers\/halloween-trunk-or-treat\.png"[^>]*alt="Halloween Trunk Or Treat flyer"/);
@@ -146,33 +142,19 @@ test("topic sections expose their matching downloadable documents", async () => 
   ]) {
     await assert.doesNotReject(access(path.join(siteDirectory, "out", ...decodeURIComponent(imagePath).slice(1).split("/"))), `${imagePath} must be present for its event flyer preview`);
   }
-  assert.doesNotMatch(heritage.html, /document-preview-image|document-preview-download/, "Flyer previews belong only on the Community Events page");
-  assert.ok(links(heritage.html).includes("/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20Survey%202003.pdf"));
-  assert.ok(links(heritage.html).includes("/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20General%20Plan.pdf"));
-  assert.doesNotMatch(heritage.text, /Heritage Center/i);
 });
 
-test("historical community documents are retained and non-empty", async () => {
-  const { html } = await page("/pvhac");
-
-  for (const document of [
-    "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20Survey%202003.pdf",
-    "/documents/Pine%20Valley%20Heritage%20Center/Pine%20Valley%20Community%20General%20Plan.pdf",
+test("PVHAC documents are retained in the archive and excluded from the site", async () => {
+  for (const archivedFile of [
+    "archive/pvhac-documents/Pine Valley Heritage Center/Pine Valley Community Survey 2003.pdf",
+    "archive/pvhac-documents/Pine Valley Heritage Center/Pine Valley Community General Plan.pdf",
+    "archive/pvhac-documents/PVHAC Meeting Minutes/2002/PVHAC Minutes of Meeting Held on December 5, 2002.pdf",
   ]) {
-    assert.ok(links(html).includes(document), `Historical page must link to ${document}`);
-    const details = await stat(path.join(siteDirectory, "out", "documents", ...decodeURIComponent(document).replace(/^\/documents\//, "").split("/")));
-    assert.ok(details.size > 0, `${document} must not be empty`);
+    const details = await stat(path.join(siteDirectory, archivedFile));
+    assert.ok(details.size > 0, `${archivedFile} must be retained and non-empty`);
   }
-});
-
-test("historical committee purpose and community plan remain available", async () => {
-  const { text } = await page("/pvhac");
-
-  assert.match(text, /Pine Valley Historical Advisory Committee/i);
-  assert.match(text, /historic preservation of the historic character/i);
-  assert.match(text, /Pine Valley Community Survey 2003/i);
-  assert.match(text, /Pine Valley Community General Plan/i);
-  assert.match(text, /Washington County Commission/i);
+  await assert.rejects(access(path.join(siteDirectory, "out", "pvhac", "index.html")));
+  await assert.rejects(access(path.join(siteDirectory, "out", "documents", "Pine Valley Heritage Center")));
 });
 
 test("PVSSD leadership, staff, and contact information are preserved", async () => {

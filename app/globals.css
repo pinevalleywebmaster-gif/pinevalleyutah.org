@@ -477,6 +477,34 @@ figcaption {
   background: white;
 }
 
+.recreation-promo {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: 850px;
+  margin-top: 1.25rem;
+}
+
+.recreation-banner-link {
+  display: block;
+  flex: 1 1 560px;
+  max-width: 560px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+}
+
+.recreation-banner-link img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.recreation-promo-text {
+  flex: 1 1 200px;
+  font: 700 1rem/1.5 Arial, sans-serif;
+}
+
 footer {
   padding: 1.75rem 0;
   background: #e7eff6;
@@ -489,6 +517,13 @@ footer p {
 }
 
 @media (max-width: 640px) {
+  .recreation-promo {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .recreation-banner-link {
+    width: 100%;
+  }
   nav ul {
     display: grid;
     grid-template-columns: 1fr 1fr;
