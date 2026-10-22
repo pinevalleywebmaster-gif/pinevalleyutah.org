@@ -9,7 +9,6 @@ const siteDirectory = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
 const outputDirectory = path.join(siteDirectory, "out");
 const pages = [
   "index.html",
-  "area-map/index.html",
   "pvhac/index.html",
   "pvssd/index.html",
   "community-events/index.html",
@@ -183,7 +182,7 @@ test("Cloudflare deployment metadata is included in the export", async () => {
   assert.match(headers, /Cache-Control: public, max-age=31536000, immutable/);
 });
 
-for (const legacyPage of ["pine-valley-area-map.html", "pvhac.html", "pvssd-board-of-trustees.html"]) {
+for (const legacyPage of ["pvhac.html", "pvssd-board-of-trustees.html"]) {
   test(`${legacyPage} remains available as a compatibility redirect`, async () => {
     const html = await readFile(path.join(outputDirectory, legacyPage), "utf8");
     assert.match(html, /http-equiv="refresh"/i);

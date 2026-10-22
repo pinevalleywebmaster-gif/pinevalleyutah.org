@@ -3,7 +3,7 @@ import { access, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { communityBuckets } from "../data/community-content.js";
+import { communityBuckets, resourceLinks } from "../data/community-content.js";
 import { getCommunityEvents } from "../lib/community-events.js";
 
 const testsDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -11,7 +11,6 @@ const siteDirectory = path.dirname(testsDirectory);
 
 const routes = new Map([
   ["/", "out/index.html"],
-  ["/area-map", "out/area-map/index.html"],
   ["/pvhac", "out/pvhac/index.html"],
   ["/pvssd", "out/pvssd/index.html"],
   ["/community-events", "out/community-events/index.html"],
@@ -48,7 +47,6 @@ function links(html) {
 test("all public destinations remain represented", () => {
   assert.deepEqual([...routes.keys()], [
     "/",
-    "/area-map",
     "/pvhac",
     "/pvssd",
     "/community-events",
@@ -75,7 +73,6 @@ test("primary navigation keeps every important destination", async () => {
     "/",
     "/pvssd/",
     "/pvhac/",
-    "/area-map/",
     "https://waterdata.usgs.gov/nwis/uv?site_no=09409100",
   ]) {
     assert.ok(pageLinks.includes(destination), `Missing navigation destination: ${destination}`);
@@ -211,12 +208,10 @@ test("PVSSD leadership, staff, and contact information are preserved", async () 
   }
 });
 
-test("area map keeps its recreation context and Forest Service destination", async () => {
-  const { html, text } = await page("/area-map");
-
-  assert.match(text, /Forest Service Campgrounds and recreational opportunities/i);
+test("community resources links directly to the Dixie National Forest", () => {
   assert.ok(
-    links(html).some((link) => link.includes("fs.usda.gov/recarea/dixie/recreation/camping-cabins")),
-    "The Dixie National Forest recreation link must remain available",
+    resourceLinks.some(({ href }) => href === "https://www.fs.usda.gov/detailfull/dixie/home/?cid=fseprd1013358"),
+    "The Dixie National Forest link must remain available",
   );
+  assert.ok(resourceLinks.every(({ href }) => href !== "/area-map/"));
 });

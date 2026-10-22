@@ -55,7 +55,6 @@ export const historicalDocuments = [
 
 export const legacyRoutes = {
   "index.html": "/",
-  "pine-valley-area-map.html": "/area-map/",
   "pvhac.html": "/pvhac/",
   "pvssd-board-of-trustees.html": "/pvssd/",
 };

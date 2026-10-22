@@ -25,6 +25,6 @@ export const communityBuckets = [
 
 export const resourceLinks = [
   { label: "Historical Advisory Committee", href: "/pvhac/" },
-  { label: "Area Map & Recreation", href: "/area-map/" },
+  { label: "Dixie National Forest", href: "https://www.fs.usda.gov/detailfull/dixie/home/?cid=fseprd1013358" },
   { label: "Santa Clara River Water Data", href: "https://waterdata.usgs.gov/nwis/uv?site_no=09409100" },
 ];

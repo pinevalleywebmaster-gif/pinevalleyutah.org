@@ -3,8 +3,8 @@ name: Sync Google Drive documents as PDFs
 on:
   workflow_dispatch:
   schedule:
-    # Drive does not emit GitHub Actions events. Poll for added or updated files.
-    - cron: "*/15 * * * *"
+    # Drive does not emit GitHub Actions events. Check for changes once each day (UTC).
+    - cron: "0 0 * * *"
 
 permissions:
   contents: write

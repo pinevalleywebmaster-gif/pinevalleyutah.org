@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { communityBuckets } from "../data/community-content";
 import { ActivityFlyer } from "./activity-flyer";
-import { ForestResourceCard } from "./forest-resource-card";
 import { SectionHeading } from "./section-heading";
 import { getCommunityEvents } from "../lib/community-events";
 
@@ -101,7 +100,6 @@ export function HomeContent() {
     <>
       <CommunityServices />
       <CommunityActivities />
-      <ForestResourceCard />
       <HelpPanel />
     </>
   );
