@@ -1,25 +1,16 @@
 // Categories come from the supplied outline; planning notes are not published facts.
 export const communityBuckets = [
-  { slug: "community-events", title: "Community Events", category: "Get involved", description: "Community activities, holiday flags, and ways to take part.", sections: [
+  { slug: "community-events", title: "Community Activities", category: "Get involved", description: "There are numerous community activities planned throughout the year. See current activities and flyers, and find out how to get involved.", sections: [
   ] },
-  { slug: "community-watch", title: "Community Watch", category: "Stay connected", description: "Community Watch policy and district contact information.", sections: [
-    { title: "Community Watch policy", text: "Read the Community Watch policy published by PVLAD.", href: "/documents/PVLAD%20Policies%20and%20Procedures/Community%20Watch%20-%20Public.pdf", label: "Open the Community Watch policy (PDF)" },
-    { title: "Questions", text: "Contact the PVLAD clerk with questions about the Community Watch policy or program.", contact: "rick.peetz@gmail.com" },
+  { slug: "community-watch", title: "Community Watch", category: "Stay connected", description: "A community watch is an organized group of Pine Valley residents who work together with law enforcement to prevent crime and improve neighborhood safety.", sections: [
   ] },
   { slug: "fire-department", title: "Fire Department", category: "Serve your community", description: "Fire prevention, department updates, and volunteer information.", sections: [
     { title: "Fire prevention & FireWise", text: "Contact the fire department for information about local FireWise activities and fire prevention programs.", contact: "pinevalleyfirestation@gmail.com" },
     { title: "Volunteer with the department", text: "For information about volunteering, contact Fire Chief Robert Hardy.", contact: "pinevalleyfirestation@gmail.com" },
   ] },
-  { slug: "pvssd", title: "Pine Valley Special Service District", category: "PVSSD", description: "Board members, public meetings, district records, and fee inquiries." },
-  { slug: "pvlad", title: "Pine Valley Local Administration District", category: "PVLAD", description: "District contacts, meeting information, and district records.", sections: [
-    { title: "About the district", text: "Find district representatives below. Contact the clerk with questions about district responsibilities or business.", contact: "rick.peetz@gmail.com" },
-    { title: "Meetings & public documents", text: "PVLAD meetings are held on the second Wednesday of each month at 6:00 pm. Contact the district clerk for agendas and minutes. Available district records are listed below." },
-  ] },
-  { slug: "overlay-zone", title: "Pine Valley Overlay Zone", category: "Planning & preservation", description: "Planning background, ordinance inquiries, and documents for PVLAD review.", sections: [
-    { title: "Background & community planning", text: "Pine Valley’s community planning materials provide background on development and historical preservation in the valley.", href: "/pvhac/", label: "Read the community planning background" },
-    { title: "Overlay ordinance", text: "Browse available planning materials below. Contact the district clerk to request the current Pine Valley Overlay Zone ordinance.", contact: "rick.peetz@gmail.com" },
-    { title: "Documents for PVLAD review", text: "Contact the district clerk to confirm which documents are needed for your proposal and how to present them to PVLAD.", href: "/pvlad/", label: "View PVLAD contacts" },
-  ] },
+  { slug: "pvssd", title: "Pine Valley Special Service District", category: "PVSSD", description: "The PVSSD oversees the Pine Valley Fire Department." },
+  { slug: "pvlad", title: "Pine Valley Local Administration District", category: "PVLAD", description: "The PVLAD board’s mission is to enhance the “sense of place” in Pine Valley, interfacing with other government agencies.", sections: [] },
+  { slug: "overlay-zone", title: "Pine Valley Overlay Zone", category: "Planning & preservation", description: "The Overlay Zone guides future development in a way that maintains Pine Valley’s rural, historical, and mountain village character and preserves its open meadows, agricultural lands, and scenic vistas.", sections: [] },
   { slug: "community-resources", title: "Community Resources", category: "Useful links", description: "Helpful links for Pine Valley history, recreation, and local water data.", sections: [] },
 ];
 

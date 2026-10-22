@@ -2,7 +2,7 @@ import { CommunityPage } from "../../components/community-page";
 
 export const metadata = {
   title: "Pine Valley Overlay Zone",
-  description: "Planning background, ordinance inquiries, and documents for PVLAD review.",
+  description: "How the Pine Valley Overlay Zone protects the valley’s rural, historical, and mountain village character.",
 };
 
 export default function OverlayZonePage() {

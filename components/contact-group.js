@@ -7,6 +7,7 @@ export function ContactGroup({ group }) {
           <li key={`${person.name}-${person.role}`}>
             <strong>{person.name}</strong>
             <span>{person.role}</span>
+            {person.phone && <a href={`tel:${person.phone.replace(/[^+\d]/g, "")}`}>{person.phone}</a>}
             <a href={`mailto:${person.email}`}>{person.email}</a>
           </li>
         ))}

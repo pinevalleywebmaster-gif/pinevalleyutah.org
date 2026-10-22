@@ -1,6 +1,6 @@
 export const navigation = [
   { label: "Home", href: "/" },
-  { label: "Community Events", href: "/community-events/" },
+  { label: "Community Activities", href: "/community-events/" },
   { label: "Community Watch", href: "/community-watch/" },
   { label: "Fire Department", href: "/fire-department/" },
   { label: "PVSSD", href: "/pvssd/" },
@@ -10,7 +10,7 @@ export const navigation = [
 
 export const meetings = {
   pvlad: "PVLAD meetings are held on the second Wednesday of each month at 6:00 pm.",
-  district: "PVSSD meetings are held on the second Wednesday of each month at 7:00 pm at the Pine Valley Fire Station.",
+  district: "PVSSD meetings are held on the second Wednesday of each month at 7:00 pm, or immediately following the PVLAD meeting that begins at 6:00 pm. Meetings are held at the Pine Valley Fire Station, 680 East Main Street. The public is welcome in person or electronically.",
   access: "PVSSD meetings are open to the public. Please feel free to attend and share your thoughts on the subjects under discussion.",
   heritage: "The Pine Valley Heritage Center opens Memorial Day weekend and remains open until Labor Day. Hours are Monday through Saturday 10:00 to 6:00.",
 };
@@ -37,13 +37,13 @@ export const districtGroups = [
   {
     title: "PV Local Administrative District",
     people: [
-      { name: "Frank Davie", role: "Chairman", email: "frankernstdavie@gmail.com" },
-      { name: "Tom Neilson", role: "Vice Chairman", email: "tnielsen714@gmail.com" },
-      { name: "Bob Dalley", role: "Member", email: "bdalley37@gmail.com" },
-      { name: "Emily Nielson", role: "Member", email: "etneilson@gmail.com" },
-      { name: "Herman Nordbruch", role: "Member", email: "pakundo251@gmail.com" },
-      { name: "Rick Peetz", role: "Clerk", email: "rick.peetz@gmail.com" },
-      { name: "Teri Forbes", role: "Treasurer", email: "tforbesgroup@hotmail.com" },
+      { name: "Frank Davie", role: "Chair", phone: "435-668-9279", email: "frankernstdavie@gmail.com" },
+      { name: "Tom Nielsen", role: "Vice Chair", phone: "760-415-2063", email: "tom.nielsen@pinevalleyutah.org" },
+      { name: "Emily Neilson", role: "Member", phone: "702-249-1726", email: "emily.neilson@pinevalleyutah.org" },
+      { name: "Cortney Snow", role: "Member", phone: "435-862-8237", email: "cortney.snow@pinevalleyutah.org" },
+      { name: "Brad Esposito", role: "Member", phone: "702-830-2662", email: "brad.esposito@pinevalleyutah.org" },
+      { name: "Rick Peetz", role: "Clerk", phone: "702-748-6058", email: "rick.peetz@pinevalleyutah.org" },
+      { name: "Teri Forbes", role: "Treasurer", phone: "435-231-4820", email: "teri.forbes@pinevalleyutah.org" },
     ],
   },
 ];

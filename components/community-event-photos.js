@@ -22,11 +22,11 @@ export function CommunityEventPhotos({ event }) {
   return (
     <>
       <PageIntro
-        eyebrow="Community events"
+        eyebrow="Community activities"
         title={`${event.title} photos`}
         description={`Photos shared from ${event.title}.`}
       >
-        <Link href="/community-events/">← Community events</Link>
+        <Link href="/community-events/">← Community activities</Link>
       </PageIntro>
       <section className="detail-section">
         {event.photos.length > 0 ? (

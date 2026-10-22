@@ -178,8 +178,8 @@ test("historical committee purpose and community plan remain available", async (
 test("PVSSD leadership, staff, and contact information are preserved", async () => {
   const { html, text } = await page("/pvssd");
   const peopleAndRoles = [
-    ["Bob Dalley", "Chairman"],
-    ["Emily Nielson", "Vice Chairman"],
+    ["Robert Dalley", "Chair"],
+    ["Emily Neilson", "Vice Chair"],
     ["Allen Cannon", "Member"],
     ["Mark Owens", "Member"],
     ["Steve Shakespeare", "Member"],
@@ -201,8 +201,9 @@ test("PVSSD leadership, staff, and contact information are preserved", async () 
     "mark.owens@pinevalleyutah.org",
     "steve.shakespeare@pinevalleyutah.org",
     "pinevalleyfirestation@gmail.com",
-    "rick.peetz@gmail.com",
-    "tforbesgroup@hotmail.com",
+    "rick.peetz@pinevalleyutah.org",
+    "teri.forbes@pinevalleyutah.org",
+    "robert.hardy@pinevalleyutah.org",
   ]) {
     assert.match(html, new RegExp(email.replaceAll(".", "\\."), "i"), `Missing email: ${email}`);
   }
