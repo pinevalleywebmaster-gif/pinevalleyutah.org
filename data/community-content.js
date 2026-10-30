@@ -15,6 +15,7 @@ export const communityBuckets = [
 ];
 
 export const resourceLinks = [
+  { label: "Pine Valley Water Quality Protection Study", href: "https://wcwcd.gov/customers/wastewater/", description: "Available on the Washington County Water Conservancy District website; scroll down to Septic Density Studies." },
   { label: "Dixie National Forest", href: "https://www.fs.usda.gov/detailfull/dixie/home/?cid=fseprd1013358" },
   { label: "Santa Clara River Water Data", href: "https://waterdata.usgs.gov/nwis/uv?site_no=09409100" },
 ];

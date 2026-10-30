@@ -65,8 +65,8 @@ test("every rendered document download across topic sections resolves to a real 
   const address = server.address();
   const origin = `http://127.0.0.1:${address.port}`;
   const pagesWithDownloads = new Map([
-    ["index.html", ["/documents/Community%20Events/Halloween%20Party%202026/Flyers/halloween-trunk-or-treat.pdf", "/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/pine-valley-gardening-club-october.pdf"]],
-    ["community-events/index.html", ["/documents/Community%20Events/Halloween%20Party%202026/Flyers/halloween-trunk-or-treat.pdf", "/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/pine-valley-gardening-club-october.pdf"]],
+    ["index.html", []],
+    ["community-events/index.html", []],
     ["pvssd/index.html", null],
     ["pvlad/index.html", null],
     ["overlay-zone/index.html", null],

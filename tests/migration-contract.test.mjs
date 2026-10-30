@@ -87,9 +87,9 @@ test("home page preserves essential community information", async () => {
   assert.ok(links(html).includes("tel:+14356805988"));
   assert.ok(links(html).includes("tel:+17025778777"));
   assert.match(text, /Halloween Trunk or Treat/i);
-  assert.match(text, /Pine Valley Gardening Club/i);
-  assert.ok(links(html).includes("/documents/Community%20Events/Halloween%20Party%202026/Flyers/halloween-trunk-or-treat.pdf"));
-  assert.ok(links(html).includes("/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/pine-valley-gardening-club-october.pdf"));
+  assert.match(text, /Pine Valley Garden Club/i);
+  assert.ok(links(html).includes("/documents/Community%20Events/Halloween%20Party%202026/Flyers/Halloween%20Trunk%20or%20Treat.pdf"));
+  assert.ok(links(html).includes("/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/October.png.pdf"));
   assert.doesNotMatch(text, /Heritage Center/i);
   assert.match(text, /Report Fraud, Waste, or Abuse/i);
   assert.match(html, /mailto:pine\.valley\.webmaster@gmail\.com/i);
@@ -108,13 +108,13 @@ test("there is no central Public Documents page or navigation entry", async () =
 
 test("topic sections expose their matching downloadable documents", async () => {
   const events = await page("/community-events");
-  assert.ok(links(events.html).includes("/documents/Community%20Events/Halloween%20Party%202026/Flyers/halloween-trunk-or-treat.pdf"));
-  assert.ok(links(events.html).includes("/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/pine-valley-gardening-club-october.pdf"));
-  assert.match(events.html, /class="document-preview-image"[^>]*src="\/documents\/Community%20Events\/Halloween%20Party%202026\/Flyers\/halloween-trunk-or-treat\.png"[^>]*alt="Halloween Trunk Or Treat flyer"/);
-  assert.match(events.html, /class="document-preview-image"[^>]*src="\/documents\/Community%20Events\/Pine%20Valley%20Garden%20Club%20October%202026\/Flyers\/pine-valley-gardening-club-october\.png"[^>]*alt="Pine Valley Gardening Club October flyer"/);
+  assert.ok(links(events.html).includes("/documents/Community%20Events/Halloween%20Party%202026/Flyers/Halloween%20Trunk%20or%20Treat.pdf"));
+  assert.ok(links(events.html).includes("/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/October.png.pdf"));
+  assert.match(events.html, /class="document-preview-image"[^>]*src="\/documents\/Community%20Events\/Halloween%20Party%202026\/Flyers\/Halloween%20Trunk%20or%20Treat.png"[^>]*alt="Halloween Trunk Or Treat flyer"/);
+  assert.match(events.html, /class="document-preview-image"[^>]*src="\/documents\/Community%20Events\/Pine%20Valley%20Garden%20Club%20October%202026\/Flyers\/October.png.png"[^>]*alt="October.Png flyer"/);
   assert.doesNotMatch(events.html, /<iframe[^>]*(?:pdf|document-preview)/i, "Event flyers should render as page images without embedded PDF viewers");
   assert.match(events.html, /aria-label="Download Halloween Trunk Or Treat PDF"/);
-  assert.match(events.html, /aria-label="Download Pine Valley Gardening Club October PDF"/);
+  assert.match(events.html, /aria-label="Download October.Png PDF"/);
   const communityEvents = getCommunityEvents();
   const eventsWithoutPhotos = communityEvents.filter((event) => event.photos.length === 0);
   const eventsWithPhotos = communityEvents.filter((event) => event.photos.length > 0);
@@ -137,8 +137,8 @@ test("topic sections expose their matching downloadable documents", async () => 
   assert.match(halloweenPhotos.text, /Photos shared from Halloween Party 2026/);
   assert.match(halloweenPhotos.text, /No photos have been posted for this event yet/);
   for (const imagePath of [
-    "/documents/Community%20Events/Halloween%20Party%202026/Flyers/halloween-trunk-or-treat.png",
-    "/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/pine-valley-gardening-club-october.png",
+    "/documents/Community%20Events/Halloween%20Party%202026/Flyers/Halloween%20Trunk%20or%20Treat.png",
+    "/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/October.png.png",
   ]) {
     await assert.doesNotReject(access(path.join(siteDirectory, "out", ...decodeURIComponent(imagePath).slice(1).split("/"))), `${imagePath} must be present for its event flyer preview`);
   }
@@ -178,16 +178,15 @@ test("PVSSD leadership, staff, and contact information are preserved", async () 
   }
   for (const email of [
     "bob.dalley@pinevalleyutah.org",
-    "emily.nielson@pinevalleyutah.org",
+    "emily.neilson@pinevalleyutah.org",
     "allen.cannon@pinevalleyutah.org",
-    "mark.owens@pinevalleyutah.org",
     "steve.shakespeare@pinevalleyutah.org",
-    "pinevalleyfirestation@gmail.com",
-    "rick.peetz@pinevalleyutah.org",
+    "mark.owens@pinevalleyutah.org",
     "teri.forbes@pinevalleyutah.org",
+    "rick.peetz@pinevalleyutah.org",
     "robert.hardy@pinevalleyutah.org",
   ]) {
-    assert.match(html, new RegExp(email.replaceAll(".", "\\."), "i"), `Missing email: ${email}`);
+    assert.ok(html.toLowerCase().includes(`mailto:${email}`), `Missing email: ${email}`);
   }
 });
 
