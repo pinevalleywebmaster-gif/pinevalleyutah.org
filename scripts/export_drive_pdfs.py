@@ -10,6 +10,7 @@ import sys
 import shutil
 import subprocess
 import tempfile
+import time
 from urllib.parse import quote
 from pathlib import Path
 
@@ -30,6 +31,7 @@ WORD_MIMES = {
     "application/vnd.ms-word.document.macroEnabled.12",
 }
 IMAGE_MIMES = {"image/jpeg", "image/png", "image/gif", "image/tiff", "image/bmp", "image/webp"}
+DOWNLOAD_RETRIES = 5
 
 
 def load_local_env():
@@ -99,6 +101,7 @@ def list_children(service, folder_id: str):
 
 def download_file(service, file_id: str, destination: Path, mime_type: str):
     from googleapiclient.http import MediaIoBaseDownload
+    from googleapiclient.errors import HttpError
 
     if mime_type in GOOGLE_EXPORTS:
         export_mime, extension = GOOGLE_EXPORTS[mime_type]
@@ -108,12 +111,27 @@ def download_file(service, file_id: str, destination: Path, mime_type: str):
         request = service.files().get_media(fileId=file_id, supportsAllDrives=True)
 
     destination.parent.mkdir(parents=True, exist_ok=True)
-    buffer = io.FileIO(destination, "wb")
-    downloader = MediaIoBaseDownload(buffer, request)
-    done = False
-    while not done:
-        _, done = downloader.next_chunk()
-    buffer.close()
+    for attempt in range(DOWNLOAD_RETRIES):
+        try:
+            with io.FileIO(destination, "wb") as buffer:
+                downloader = MediaIoBaseDownload(buffer, request)
+                done = False
+                while not done:
+                    _, done = downloader.next_chunk()
+            return
+        except HttpError as error:
+            status = getattr(error.resp, "status", None)
+            if status not in (408, 429, 500, 502, 503, 504) or attempt == DOWNLOAD_RETRIES - 1:
+                destination.unlink(missing_ok=True)
+                raise
+            destination.unlink(missing_ok=True)
+            delay = min(2 ** attempt, 16)
+            print(
+                f"Transient Google Drive HTTP {status} downloading {file_id}; "
+                f"retrying in {delay}s ({attempt + 1}/{DOWNLOAD_RETRIES - 1})",
+                file=sys.stderr,
+            )
+            time.sleep(delay)
 
 
 def convert_office_file(source: Path, destination: Path):

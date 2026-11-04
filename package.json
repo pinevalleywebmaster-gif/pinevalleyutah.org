@@ -7,6 +7,7 @@
     "build": "next build",
     "preview": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy",
+    "test:drive-site": "node --test tests/drive-site-availability.test.mjs",
     "test": "npm run build && node --test"
   },
   "dependencies": {
