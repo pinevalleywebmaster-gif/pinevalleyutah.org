@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile, stat } from "node:fs/promises";
+import { access, readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -9,17 +9,29 @@ import { getCommunityEvents } from "../lib/community-events.js";
 const testsDirectory = path.dirname(fileURLToPath(import.meta.url));
 const siteDirectory = path.dirname(testsDirectory);
 
-const routes = new Map([
+const fixedRoutes = [
   ["/", "out/index.html"],
   ["/pvssd", "out/pvssd/index.html"],
   ["/community-events", "out/community-events/index.html"],
-  ["/community-events/halloween-party-2026/photos", "out/community-events/halloween-party-2026/photos/index.html"],
-  ["/community-events/pine-valley-garden-club-october-2026/photos", "out/community-events/pine-valley-garden-club-october-2026/photos/index.html"],
   ["/community-watch", "out/community-watch/index.html"],
   ["/fire-department", "out/fire-department/index.html"],
   ["/pvlad", "out/pvlad/index.html"],
   ["/overlay-zone", "out/overlay-zone/index.html"],
+];
+const eventPhotoRoutes = getCommunityEvents().map(({ slug }) => [
+  `/community-events/${slug}/photos`,
+  `out/community-events/${slug}/photos/index.html`,
 ]);
+const routes = new Map([
+  ...fixedRoutes.slice(0, 3),
+  ...eventPhotoRoutes,
+  ...fixedRoutes.slice(3),
+]);
+
+function escapeHtml(value) {
+  return value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("'", "&#x27;")
+    .replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+}
 
 async function page(route) {
   const file = routes.get(route);
@@ -43,13 +55,26 @@ function links(html) {
     .map((match) => match[1].replace(/&amp;/g, "&"));
 }
 
+async function filesUnder(directory) {
+  let entries;
+  try {
+    entries = await readdir(directory, { withFileTypes: true });
+  } catch (error) {
+    if (error.code === "ENOENT") return [];
+    throw error;
+  }
+  return (await Promise.all(entries.map((entry) => {
+    const child = path.join(directory, entry.name);
+    return entry.isDirectory() ? filesUnder(child) : entry.isFile() ? [child] : [];
+  }))).flat();
+}
+
 test("all public destinations remain represented", () => {
   assert.deepEqual([...routes.keys()], [
     "/",
     "/pvssd",
     "/community-events",
-    "/community-events/halloween-party-2026/photos",
-    "/community-events/pine-valley-garden-club-october-2026/photos",
+    ...eventPhotoRoutes.map(([route]) => route),
     "/community-watch",
     "/fire-department",
     "/pvlad",
@@ -86,10 +111,12 @@ test("home page preserves essential community information", async () => {
   assert.match(text, /Mitzi Sullivan at 435-680-5988 or Korrie Ford at 702-577-8777/i);
   assert.ok(links(html).includes("tel:+14356805988"));
   assert.ok(links(html).includes("tel:+17025778777"));
-  assert.match(text, /Halloween Trunk or Treat/i);
-  assert.match(text, /Pine Valley Garden Club/i);
-  assert.ok(links(html).includes("/documents/Community%20Events/Halloween%20Party%202026/Flyers/Halloween%20Trunk%20or%20Treat.pdf"));
-  assert.ok(links(html).includes("/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/October.png.pdf"));
+  for (const event of getCommunityEvents()) {
+    assert.ok(text.includes(event.title), `Home page should include ${event.title}`);
+    for (const flyer of event.flyers) {
+      assert.ok(links(html).includes(flyer.href), `Home page should link to ${flyer.title}`);
+    }
+  }
   assert.doesNotMatch(text, /Heritage Center/i);
   assert.match(text, /Report Fraud, Waste, or Abuse/i);
   assert.match(html, /mailto:pine\.valley\.webmaster@gmail\.com/i);
@@ -108,23 +135,24 @@ test("there is no central Public Documents page or navigation entry", async () =
 
 test("topic sections expose their matching downloadable documents", async () => {
   const events = await page("/community-events");
-  assert.ok(links(events.html).includes("/documents/Community%20Events/Halloween%20Party%202026/Flyers/Halloween%20Trunk%20or%20Treat.pdf"));
-  assert.ok(links(events.html).includes("/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/October.png.pdf"));
-  assert.match(events.html, /class="document-preview-image"[^>]*src="\/documents\/Community%20Events\/Halloween%20Party%202026\/Flyers\/Halloween%20Trunk%20or%20Treat.png"[^>]*alt="Halloween Trunk Or Treat flyer"/);
-  assert.match(events.html, /class="document-preview-image"[^>]*src="\/documents\/Community%20Events\/Pine%20Valley%20Garden%20Club%20October%202026\/Flyers\/October.png.png"[^>]*alt="October.Png flyer"/);
-  assert.doesNotMatch(events.html, /<iframe[^>]*(?:pdf|document-preview)/i, "Event flyers should render as page images without embedded PDF viewers");
-  assert.match(events.html, /aria-label="Download Halloween Trunk Or Treat PDF"/);
-  assert.match(events.html, /aria-label="Download October.Png PDF"/);
   const communityEvents = getCommunityEvents();
+  const eventCards = [...events.html.matchAll(/<article class="community-event-card">([\s\S]*?)<\/article>/g)]
+    .map(([, card]) => card);
+  assert.equal(eventCards.length, communityEvents.length, "Each current event should have one card");
+  assert.doesNotMatch(events.html, /<iframe[^>]*(?:pdf|document-preview)/i, "Event flyers should render as page images without embedded PDF viewers");
   const eventsWithoutPhotos = communityEvents.filter((event) => event.photos.length === 0);
   const eventsWithPhotos = communityEvents.filter((event) => event.photos.length > 0);
   assert.equal([...events.html.matchAll(/<button[^>]*disabled=""/g)].length, eventsWithoutPhotos.length, "Events without photos should have inactive photo buttons");
   for (const event of eventsWithoutPhotos) {
-    assert.match(events.html, new RegExp(`<h3>${event.title}</h3>[\\s\\S]*?<button[^>]*disabled=""[^>]*>No photos posted for this event yet`));
-    assert.doesNotMatch(events.html, new RegExp(`href="/community-events/${event.slug}/photos/"`), `${event.title} must not link to an empty photo page`);
+    const card = eventCards.find((candidate) => candidate.includes(`<h3>${escapeHtml(event.title)}</h3>`));
+    assert.ok(card, `Missing card for ${event.title}`);
+    assert.match(card, /<button[^>]*disabled=""[^>]*>No photos posted for this event yet/);
+    assert.doesNotMatch(card, new RegExp(`href="/community-events/${event.slug}/photos/"`), `${event.title} must not link to an empty photo page`);
   }
   for (const event of eventsWithPhotos) {
-    assert.ok(links(events.html).includes(`/community-events/${event.slug}/photos/`), `${event.title} needs an active photo link`);
+    const card = eventCards.find((candidate) => candidate.includes(`<h3>${escapeHtml(event.title)}</h3>`));
+    assert.ok(card, `Missing card for ${event.title}`);
+    assert.ok(card.includes(`/community-events/${event.slug}/photos/`), `${event.title} needs an active photo link`);
     const photosPage = await page(`/community-events/${event.slug}/photos`);
     assert.match(photosPage.html, /class="community-event-photo-grid"/);
     for (const photo of event.photos) {
@@ -132,29 +160,40 @@ test("topic sections expose their matching downloadable documents", async () => 
       assert.match(photosPage.html, new RegExp(`<img src="${photo.href.replaceAll("/", "\\/")}" alt="${photo.title}"`));
     }
   }
-  const halloweenPhotos = await page("/community-events/halloween-party-2026/photos");
-  assert.match(halloweenPhotos.text, /Halloween Party 2026 photos/);
-  assert.match(halloweenPhotos.text, /Photos shared from Halloween Party 2026/);
-  assert.match(halloweenPhotos.text, /No photos have been posted for this event yet/);
-  for (const imagePath of [
-    "/documents/Community%20Events/Halloween%20Party%202026/Flyers/Halloween%20Trunk%20or%20Treat.png",
-    "/documents/Community%20Events/Pine%20Valley%20Garden%20Club%20October%202026/Flyers/October.png.png",
-  ]) {
-    await assert.doesNotReject(access(path.join(siteDirectory, "out", ...decodeURIComponent(imagePath).slice(1).split("/"))), `${imagePath} must be present for its event flyer preview`);
+
+  for (const event of communityEvents) {
+    const card = eventCards.find((candidate) => candidate.includes(`<h3>${escapeHtml(event.title)}</h3>`));
+    assert.ok(card, `Missing card for ${event.title}`);
+    const heading = card.match(/<div class="community-event-heading">([\s\S]*?)<\/div>/)?.[1] ?? "";
+    assert.ok(heading.includes(`<h3>${escapeHtml(event.title)}</h3>`), `${event.title} should have a heading`);
+    for (const flyer of event.flyers) {
+      assert.ok(card.includes(`href="${escapeHtml(flyer.href)}"`), `${event.title} should link to ${flyer.title}`);
+      assert.ok(heading.includes(`aria-label="Download ${escapeHtml(flyer.title)} PDF"`), `${flyer.title} needs a download button beside the event name`);
+      assert.ok(heading.includes("download"), `${flyer.title} download button should use the browser download behavior`);
+      if (flyer.previewImage) {
+        assert.ok(card.includes(`src="${escapeHtml(flyer.previewImage)}"`), `${flyer.title} preview should appear in the event card`);
+        const imagePath = path.join(siteDirectory, "out", ...decodeURIComponent(flyer.previewImage).slice(1).split("/"));
+        await assert.doesNotReject(access(imagePath), `${flyer.previewImage} must be present for its event preview`);
+      }
+    }
   }
+  assert.doesNotMatch(events.html, /PDF document|document-preview-card/);
 });
 
 test("PVHAC documents are retained in the archive and excluded from the site", async () => {
-  for (const archivedFile of [
-    "archive/pvhac-documents/Pine Valley Heritage Center/Pine Valley Community Survey 2003.pdf",
-    "archive/pvhac-documents/Pine Valley Heritage Center/Pine Valley Community General Plan.pdf",
-    "archive/pvhac-documents/PVHAC Meeting Minutes/2002/PVHAC Minutes of Meeting Held on December 5, 2002.pdf",
-  ]) {
-    const details = await stat(path.join(siteDirectory, archivedFile));
-    assert.ok(details.size > 0, `${archivedFile} must be retained and non-empty`);
+  const archivedFiles = await filesUnder(path.join(siteDirectory, "archive", "pvhac-documents"));
+  const archivedPdfs = archivedFiles.filter((file) => path.extname(file).toLocaleLowerCase() === ".pdf");
+  assert.ok(archivedPdfs.length > 0, "PVHAC PDFs should remain archived");
+  for (const archivedPdf of archivedPdfs) {
+    const details = await stat(archivedPdf);
+    assert.ok(details.size > 0, `${path.relative(siteDirectory, archivedPdf)} must be non-empty`);
   }
   await assert.rejects(access(path.join(siteDirectory, "out", "pvhac", "index.html")));
-  await assert.rejects(access(path.join(siteDirectory, "out", "documents", "Pine Valley Heritage Center")));
+  const publicDocumentFiles = await filesUnder(path.join(siteDirectory, "out", "documents"));
+  assert.ok(publicDocumentFiles.every((file) => {
+    const relativePath = path.relative(path.join(siteDirectory, "out", "documents"), file).toLocaleLowerCase();
+    return !relativePath.includes("pine valley heritage center") && !relativePath.split(path.sep).some((segment) => segment.startsWith("pvhac"));
+  }), "PVHAC files should not be included in public documents");
 });
 
 test("PVSSD leadership, staff, and contact information are preserved", async () => {

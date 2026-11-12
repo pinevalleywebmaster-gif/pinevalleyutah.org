@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { navigation } from "../data/site-content";
+import { HomeAnnouncement, HomeSubtitle } from "./home-subtitle";
+import { PrimaryNavigation } from "./primary-navigation";
 
 function AnnouncementBar() {
   return (
@@ -12,28 +13,16 @@ function AnnouncementBar() {
   );
 }
 
-function PrimaryNavigation() {
-  return (
-    <nav aria-label="Primary navigation">
-      <ul>
-        {navigation.map((item) => (
-          <li key={item.href}>
-            <Link href={item.href}>{item.label}</Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-}
-
 export function SiteHeader() {
   return (
     <header className="site-header">
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <AnnouncementBar />
+      <HomeAnnouncement>
+        <AnnouncementBar />
+      </HomeAnnouncement>
       <div className="brand-wrap">
         <Link className="brand" href="/">Pine Valley Utah</Link>
-        <p>Community information and public resources</p>
+        <HomeSubtitle />
       </div>
       <PrimaryNavigation />
     </header>

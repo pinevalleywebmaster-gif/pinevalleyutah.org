@@ -137,16 +137,17 @@ def download_file(service, file_id: str, destination: Path, mime_type: str):
 def convert_office_file(source: Path, destination: Path):
     """Convert a downloaded Office document with headless LibreOffice."""
     destination.parent.mkdir(parents=True, exist_ok=True)
-    profile = Path(tempfile.mkdtemp(prefix="libreoffice-profile-"))
-    try:
-        subprocess.run(
-            ["libreoffice", f"-env:UserInstallation={profile.as_uri()}", "--headless", "--convert-to", "pdf", "--outdir", str(destination.parent), str(source)],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-    except (OSError, subprocess.CalledProcessError) as error:
-        raise RuntimeError(f"Could not convert Office document {source.name} to PDF: {error}") from error
+    with tempfile.TemporaryDirectory(prefix="libreoffice-profile-") as temporary_profile:
+        profile = Path(temporary_profile)
+        try:
+            subprocess.run(
+                ["libreoffice", f"-env:UserInstallation={profile.as_uri()}", "--headless", "--convert-to", "pdf", "--outdir", str(destination.parent), str(source)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        except (OSError, subprocess.CalledProcessError) as error:
+            raise RuntimeError(f"Could not convert Office document {source.name} to PDF: {error}") from error
     generated = destination.parent / f"{source.stem}.pdf"
     if not generated.exists():
         raise RuntimeError(f"LibreOffice did not create the expected PDF for {source.name}")

@@ -3,15 +3,12 @@ import { access, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { getCommunityEvents } from "../lib/community-events.js";
+import { getCommunityEvents, sortCommunityEvents } from "../lib/community-events.js";
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 test("event page discovers its folders, flyer PDFs, and rendered preview images", async () => {
   const events = getCommunityEvents();
-  const eventNames = new Set(events.map(({ title }) => title));
-  assert.ok(eventNames.has("Halloween Party 2026"));
-  assert.ok(eventNames.has("Pine Valley Garden Club October 2026"));
 
   for (const event of events) {
     assert.ok(event.flyers.length > 0 || event.photos.length > 0, `${event.title} should include a flyer or photo`);
@@ -26,6 +23,20 @@ test("event page discovers its folders, flyer PDFs, and rendered preview images"
       await assert.doesNotReject(access(path.join(root, "public", decodeURIComponent(photo.href).slice(1))), `${event.title} photo is missing`);
     }
   }
+});
+
+test("events sort newest first, alphabetically on ties, with undated events last", () => {
+  const events = [
+    { title: "Undated Event", addedTime: null },
+    { title: "Older Event", addedTime: 100 },
+    { title: "Zulu Event", addedTime: 100 },
+    { title: "Newest Event", addedTime: 200 },
+    { title: "Alpha Event", addedTime: 100 },
+  ];
+  assert.deepEqual(
+    sortCommunityEvents(events).map(({ title }) => title),
+    ["Newest Event", "Alpha Event", "Older Event", "Zulu Event", "Undated Event"],
+  );
 });
 
 test("all synced community event directories keep their Photos folder, even while empty", async () => {

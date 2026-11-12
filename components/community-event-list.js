@@ -1,14 +1,51 @@
 import Link from "next/link";
-import { DocumentList } from "./document-list";
+import { DownloadIcon } from "./download-icon";
+
+function EventFlyers({ flyers }) {
+  return (
+    <div className="community-event-flyers">
+      {flyers.map((flyer) => flyer.previewImage ? (
+        <a
+          className="community-event-flyer"
+          key={flyer.href}
+          href={flyer.href}
+          aria-label={`Open ${flyer.title} flyer PDF`}
+        >
+          <img src={flyer.previewImage} alt={`${flyer.title} flyer`} loading="lazy" />
+        </a>
+      ) : (
+        <a key={flyer.href} href={flyer.href}>{flyer.title}</a>
+      ))}
+    </div>
+  );
+}
 
 function CommunityEventCard({ event }) {
   const photosHref = `/community-events/${event.slug}/photos/`;
 
   return (
     <article className="community-event-card">
-      <h3>{event.title}</h3>
+      <div className="community-event-heading">
+        <h3>{event.title}</h3>
+        {event.flyers.length > 0 && (
+          <div className="community-event-downloads">
+            {event.flyers.map((flyer) => (
+              <a
+                className="document-preview-download"
+                key={flyer.href}
+                href={flyer.href}
+                download
+                aria-label={`Download ${flyer.title} PDF`}
+                title={`Download ${flyer.title} PDF`}
+              >
+                <DownloadIcon />
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
       {event.flyers.length > 0 ? (
-        <DocumentList documents={event.flyers} preview />
+        <EventFlyers flyers={event.flyers} />
       ) : (
         <p className="community-event-empty">No flyers have been posted for this event yet.</p>
       )}

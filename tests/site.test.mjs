@@ -4,19 +4,24 @@ import path from "node:path";
 import { createServer } from "node:http";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { getCommunityEvents } from "../lib/community-events.js";
 
 const siteDirectory = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const outputDirectory = path.join(siteDirectory, "out");
-const pages = [
+const fixedPages = [
   "index.html",
   "pvssd/index.html",
   "community-events/index.html",
-  "community-events/halloween-party-2026/photos/index.html",
-  "community-events/pine-valley-garden-club-october-2026/photos/index.html",
   "community-watch/index.html",
   "fire-department/index.html",
   "pvlad/index.html",
   "overlay-zone/index.html",
+];
+const eventPhotoPages = getCommunityEvents().map(({ slug }) => `community-events/${slug}/photos/index.html`);
+const pages = [
+  ...fixedPages.slice(0, 3),
+  ...eventPhotoPages,
+  ...fixedPages.slice(3),
 ];
 
 for (const file of pages) {

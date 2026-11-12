@@ -36,7 +36,6 @@ export function SiteFooter() {
         <div className="footer-grid">
           <div>
             <strong className="footer-brand">Pine Valley Utah</strong>
-            <p>Community information and public resources</p>
           </div>
           <FooterResources />
           <FooterContact />

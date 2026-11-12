@@ -9,7 +9,8 @@
     "preview": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy",
     "test:drive-site": "node --test tests/drive-site-availability.test.mjs",
-    "test": "npm run build && node --test"
+    "test:python": "python -B -m unittest discover -s tests -p \"test_*.py\"",
+    "test": "npm run build && node --test && npm run test:python"
   },
   "dependencies": {
     "next": "latest",
