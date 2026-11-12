@@ -89,7 +89,7 @@ def list_children(service, folder_id: str):
             pageSize=1000,
             pageToken=page_token,
             orderBy="name",
-            fields="nextPageToken, files(id,name,mimeType,modifiedTime,webViewLink)",
+            fields="nextPageToken, files(id,name,mimeType,modifiedTime,createdTime,webViewLink)",
             supportsAllDrives=True,
             includeItemsFromAllDrives=True,
         ).execute()
@@ -165,7 +165,7 @@ def convert_image_file(source: Path, destination: Path):
         image.save(destination, "PDF", resolution=150.0)
 
 
-def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_paths: set[Path], manifest: list[dict]):
+def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_paths: set[Path], manifest: list[dict], event_added_time: str | None = None):
     children = list(list_children(service, folder_id))
     if relative_dir.name.casefold() == "photos" or (relative_dir.name.casefold() == "flyers" and not children):
         (output_root / relative_dir / ".gitkeep").parent.mkdir(parents=True, exist_ok=True)
@@ -178,7 +178,8 @@ def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_pa
                 continue
             child_dir = relative_dir / name
             (output_root / child_dir).mkdir(parents=True, exist_ok=True)
-            walk(service, output_root, item["id"], child_dir, seen_paths, manifest)
+            child_event_added_time = item.get("createdTime") if relative_dir.name.casefold() == "community events" else event_added_time
+            walk(service, output_root, item["id"], child_dir, seen_paths, manifest, child_event_added_time)
             continue
 
         mime_type = item["mimeType"]
@@ -218,6 +219,7 @@ def walk(service, output_root: Path, folder_id: str, relative_dir: Path, seen_pa
             "sourceId": item["id"],
             "sourceName": item["name"],
             "sourcePath": (relative_dir / name).as_posix(),
+            **({"eventAddedTime": event_added_time} if event_added_time else {}),
             **({"type": "image"} if keep_photo_image else {}),
         })
 
